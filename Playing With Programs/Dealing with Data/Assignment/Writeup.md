@@ -1,0 +1,183 @@
+
+## Challenge Information
+
+```
+Let's start your journey through encodings with something simple. This program takes a password, but you have no way to know what it is... unless you _READ_ it!
+
+In most cybersecurity analysis settings, you will be analyzing software that you did not write, like this program. Thus, the very first skill you will learn in this module is to read software to understand what is the data that it wants you to send. We'll start with this trivial Python program.
+
+The program lives in `/challenge/runme`, and will request a tricky password before it gives you the flag. It's going to be the simplest program you read in your journey, as it just reads data over standard input and makes one simple check.
+
+Read the program, understand the Python, and make the program give you the flag!
+```
+
+
+
+## 1. `What's the password?`
+
+
+![What's the Password?](./Images/Img1.png)
+
+As the challenge asked I went to the `/challenge` directory location and read the **runme** file. The script is asking us to input a certain text and then compares our input to the original string input. If our input and the original input is equal then the **flag** is printed. I will be hiding the flag because I want you to try it yourselves and find the answer.
+
+
+## 2. `...and again!`
+
+
+This challenge follows the same concept used is the previous challenge. Read the code, understand it, then provide the input to get the flag.
+
+![...and again!](./Images/Img2.png)
+
+
+## 3. `Newline Troubles`
+
+
+![Newline Troubles](./Images/Img3.png)
+
+The program wants us to provide a certain string as input but the catch is it will also take the **enter or \n** as part of the input as well so we need to prevent that from happening. `echo -n` commands helps us supply our input string value without appending the **newline or \n**.
+
+
+## 4. `Reasoning about files`
+
+![Reasoning about files](./Images/Img4.png)
+
+The program reads bytes of the string from a file named **ryoy** and matches the string inside the file with the program string. I first tried to create the file in that same directory but was unable due to insufficient permissions so I created the file in the **/tmp** directory. After that I added the input string using the same `echo -n` to prevent appending the newline. 
+
+
+## 5. `Specifying Filenames`
+
+![Specifying Filenames](./Images/Img5.png)
+
+Create a file and provide the necessary input string and supply the filename as the command line argument for the **runme** program string.
+
+
+## 6. `Binary and Hex Encoding`
+
+![Binary and Hex Encoding](./Images/Img6.png)
+
+The program takes **input in raw bytes** then converts them into string format using **decode()** and then uses the **bytes.fromhex** method to convert the hex string to bytes format again. Analyze the program carefully and I am sure you will understand why I gave **86** as input. You can open up a python command line interpreter to clarify your thought process.
+
+
+## 7. `More Hex`
+
+![More Hex](./Images/Img7.png)
+
+Same as the previous challenge. **Reads input in raw bytes**, then converts to string using **decode()** and then to bytes using **bytes.fromhex()**. If you understood the previous one this one should be cake walk as well.
+
+
+## 8. `Decoding Hex`
+
+![Decoding Hex](./Images/Img8.png)
+
+The `\x` interprets each pair of characters as a single byte which makes the it 8 bytes in total. But the original byte literal there are 16 bytes in total because each character is interpreted as a single byte. So we used `echo -e` to produce the raw binary data into the file.
+
+
+## 9. `Decoding Practice`
+
+![Decoding Practice](./Images/Img9.png)
+
+I edited the code by copying it and then printing the **correct_password** variable. The value came `b'\x98\xd3\xd0\xb2\xce\xe1\xee\xab'`  so this raw bytes was compared with the **entered_password**. So as usual I used the `echo -e` to interpret the `\xNN` as a single byte and match **entered_password** and **correct_password**.
+
+
+## 10. `Encoding Practice`
+
+We need to first convert the `b"\x8a\xed\xec\xc4\xed\x95\xf7\xb8"` in bits. Below is the python program for that.
+
+```python
+byte_string = b'\x8a\xed\xec\xc4\xed\x95\xf7\xb8'
+binary_representation = []
+
+for byte_value in byte_string:
+    # Convert each byte (integer 0-255) to its 8-bit binary representation
+    # The '08b' format specifier ensures leading zeros are included for 8 bits
+    binary_representation.append(format(byte_value, '08b'))
+    
+# Join the 8-bit binary strings for each byte into a single string
+result = "".join(binary_representation)
+print(result)
+```
+
+![Encoding Practice](./Images/Img10.png)
+
+After copying the bits I used `echo -n` to prevent appending newline and added the bits into a file named **input**. Then I passed the content of the **input** file to the program and got the flag.
+
+
+## 11. `Hex-encoding ASCII`
+
+**NOTE: Python encodes string into bytes object which is equivalent to its ASCII value. Check this using `man ascii` command.**
+
+![Hex-encoding ASCII](./Images/Img11.png)
+
+I passed the ASCII values corresponding to the string `eewqcnzx`. I used gdb for displaying the hex values of the string.
+
+```bash
+hacker@data-dealings~hex-encoding-ascii:/challenge$ gdb -q
+(gdb) p/x "eewqcnzx"
+$1 = {0x65, 0x65, 0x77, 0x71, 0x63, 0x6e, 0x7a, 0x78, 0x0}
+```
+
+
+## 12. `Nested Encoding`
+
+
+#### Challenge Program
+
+```python
+hacker@data-dealings~nested-encoding:/tmp$ cat ../challenge/runme
+#!/usr/bin/exec-suid -- /bin/python3 -I
+
+import sys
+
+
+try:
+    entered_password = open("vdho", "rb").read()
+except FileNotFoundError:
+    print("Input file not found...")
+    sys.exit(1)
+correct_password = b"pkukrtnj"
+
+print(f"Read {len(entered_password)} bytes.")
+
+
+entered_password = bytes.fromhex(entered_password.decode("l1"))
+entered_password = bytes.fromhex(entered_password.decode("l1"))
+entered_password = bytes.fromhex(entered_password.decode("l1"))
+entered_password = bytes.fromhex(entered_password.decode("l1"))
+
+
+if entered_password == correct_password:
+    print("Congrats! Here is your flag:")
+    print(open("/flag").read().strip())
+else:
+    print("Incorrect!")
+    sys.exit(1)
+
+```
+
+
+Now here our **correct_password** is decoded 4 times so we need to perform encoding and hexing 4 times as well because any lesser than that either we are going to get a format where **hex()** operation cannot be performed or during **bytes.fromhex()** our data will be having non-hexadecimal values.
+
+I used the python command line interpreter to form my input data. Below is the code snippet for that.
+
+```bash
+hacker@data-dealings~nested-encoding:/tmp$ python
+Python 3.12.11 (main, Jun  3 2025, 15:41:47) [GCC 14.2.1 20250322] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> a=b'pkukrtnj'
+>>> h=a.hex().encode().hex().encode().hex().encode().hex()
+>>> h
+'33333337333333303333333633363332333333373333333533333336333633323333333733333332333333373333333433333336333633353333333633363331'
+>>> exit()
+hacker@data-dealings~nested-encoding:/tmp$ echo -n 33333337333333303333333633363332333333373333333533333336333633323333333733333332333333373333333433333336333633353333333633363331 > vdho
+```
+
+
+Now copy this hex value to the **vhdo** file and run the **runme** program to get the flag.
+
+![Nested Encoding](./Images/Img12.png)
+
+We got the flag!!!.
+
+
+## 13. `Hex-encoding UTF-8`
+
