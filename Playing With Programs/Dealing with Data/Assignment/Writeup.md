@@ -181,3 +181,53 @@ We got the flag!!!.
 
 ## 13. `Hex-encoding UTF-8`
 
+
+#### Challenge Program
+
+```python
+hacker@data-dealings~hex-encoding-utf-8:/tmp$ cat ../challenge/runme
+#!/usr/bin/exec-suid -- /bin/python3 -I
+
+import sys
+
+
+print("Enter the password:")
+entered_password = sys.stdin.buffer.read1()
+correct_password = "📊 🚔 🔦 🕞".encode("utf-8")
+
+print(f"Read {len(entered_password)} bytes.")
+
+
+entered_password = bytes.fromhex(entered_password.decode("l1"))
+
+
+if entered_password == correct_password:
+    print("Congrats! Here is your flag:")
+    print(open("/flag").read().strip())
+else:
+    print("Incorrect!")
+    sys.exit(1)
+```
+
+I edited the code a bit so that i could print the **correct_password** value and get the **hex byte string** for the emojis.
+
+```bash
+hacker@data-dealings~hex-encoding-utf-8:/tmp$ cat test.py
+correct_password = "📊 🚔 🔦 🕞".encode("utf-8")
+print(f"Read {len(correct_password)} bytes.")
+print(correct_password)
+hacker@data-dealings~hex-encoding-utf-8:/tmp$ python test.py 
+Read 19 bytes.
+b'\xf0\x9f\x93\x8a \xf0\x9f\x9a\x94 \xf0\x9f\x94\xa6 \xf0\x9f\x95\x9e'
+```
+
+**NOTE: the hex value for spaces is 0x20 which is not mentioned here. You will need this later.**
+
+```bash
+hacker@data-dealings~hex-encoding-utf-8:/tmp$ echo -n 'f09f938a20f09f9a9420f09f94a620f09f959e' > input
+```
+
+I provided the hex values of the emojis and also provided the hex value for the spaces. There were 3 spaces so 0x20 will be given as input 3 times. I stored the data inside a file and used `echo -n` command to prevent appending new line so that those extra bytes don't mess my logic. 
+
+![Hex-encoding UTF-8](./Images/Img13.png)
+
