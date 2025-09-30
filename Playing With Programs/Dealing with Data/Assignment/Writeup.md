@@ -259,3 +259,27 @@ The program reads the data in bytes so I used `echo -e` to interpret those `\x` 
 
 ![UTF Mixups](./Images/Img14.png)
 
+
+## 15. `Modifying Encoded Data`
+
+I used the python command line interpreter to solve this challenge by experimenting and analyzing the hex values and the decoding and encoding. Below is how I did it.
+
+```bash
+hacker@data-dealings~modifying-encoded-data:~$ python
+Python 3.12.11 (main, Jun  3 2025, 15:41:47) [GCC 14.2.1 20250322] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> original=b'\xdcr\x9dn\x14W\xab\xbe'  ------>(OUR CORRECT PASSWORD)
+>>> original.hex()
+'dc729d6e1457abbe'   ---------> (HEX FORM OF CORRECT PASSWORD)
+>>> 'dc729d6e1457abbe'[::-1] ----> (REVERSE OF HEX FORM)
+'ebba7541e6d927cd'
+>>> b'dc729d6e1457abbe'.decode('l1')
+'dc729d6e1457abbe'
+>>> bytes.fromhex('dc729d6e1457abbe')
+b'\xdcr\x9dn\x14W\xab\xbe' 
+```
+
+So  according to the above analysis our input should be `ebba7541e6d927cd`.
+
+![Modifying Encoded Data](./Images/Img15.png)
+
