@@ -231,3 +231,31 @@ I provided the hex values of the emojis and also provided the hex value for the 
 
 ![Hex-encoding UTF-8](./Images/Img13.png)
 
+
+## 14. `UTF Mixups`
+
+The challenge program here is decoded using **utf-16** and then encoded using **latin1** so there will be error. 
+##### IMPORTANT POINTS
+- UTF-16 takes 2 bytes 
+- UTF-16 stores those bytes in Little Endian.
+
+Remember these 2 points because you need to arrange your **hex bytes** accordingly. I used gdb first to get the hex value of the `mpseczuv`.
+
+```bash
+hacker@data-dealings~utf-mixups:/challenge$ gdb -q
+(gdb) p/x "mpseczuv"
+$1 = {0x6d, 0x70, 0x73, 0x65, 0x63, 0x7a, 0x75, 0x76, 0x0}
+```
+
+If this is the hex value according to the **utf-8** then the **utf-16** arrangement will be `\x6d\x00\x70\x00\x73\x00\x65\x00\x63\x00\x7a\x00\x75\x00\x76\x00`.
+
+```bash
+hacker@data-dealings~utf-mixups:/tmp$ echo -e -n '\x6d\x00\x70\x00\x73\x00\x65\x00\x63\x00\x7a\x00\x75\x00\x76\x00' > input2
+hacker@data-dealings~utf-mixups:/tmp$ cat input2
+mpseczuv
+```
+
+The program reads the data in bytes so I used `echo -e` to interpret those `\x` as a byte. The terminal was able to connect the **utf-16** encoding and print the characters in a readable format.
+
+![UTF Mixups](./Images/Img14.png)
+
