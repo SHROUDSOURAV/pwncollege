@@ -283,3 +283,55 @@ So  according to the above analysis our input should be `ebba7541e6d927cd`.
 
 ![Modifying Encoded Data](./Images/Img15.png)
 
+
+
+## 16. `Decoding Base64`
+
+Read the **runme** file carefully and try to understand the code. I used the python command line interpreter to get the value of the **correct_password** so that I can configure my input data accordingly.
+
+```bash
+hacker@data-dealings~decoding-base64:~$ python
+Python 3.12.11 (main, Jun  3 2025, 15:41:47) [GCC 14.2.1 20250322] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> original=b'rFSn2eTJLic='
+>>> import base64
+>>> base64.b64decode(original)
+b"\xacT\xa7\xd9\xe4\xc9.'"
+```
+
+So the input data should be `\xacT\xa7\xd9\xe4\xc9.'` 
+
+![Decoding Base64](./Images/Img16.png)
+
+
+
+## 17. `Encoding Base64`
+
+In this challenge we need to encoded our input data. I used the python command line interpreter to form the input data.
+
+```bash
+>>> input=b'\x832\xdb\xc4\xc5\xd0\xaa\x8a'
+>>> base64.b64encode(input)
+b'gzLbxMXQqoo='     ------------------------> (INPUT)
+>>> encode=base64.b64encode(input)
+>>> encode
+b'gzLbxMXQqoo='
+>>> decode=encode.decode('l1')
+>>> decode
+'gzLbxMXQqoo='    
+>>> baseDecode=base64.b64decode(decode)
+>>> baseDecode
+b'\x832\xdb\xc4\xc5\xd0\xaa\x8a'
+```
+
+You can also use the **echo** command to supply the raw bytes to **base64** in the terminal to form the encoding directly in the terminal without having to use the python command line interpreter.
+
+```bash
+hacker@data-dealings~encoding-base64:/challenge$ echo -e -n '\x832\xdb\xc4\xc5\xd0\xaa\x8a' | base64
+gzLbxMXQqoo=
+```
+
+Now copy this **base64** encoding value and copy into a file without any newlines using `echo -n`.
+
+![Encoding Base64](./Images/Img17.png)
+
