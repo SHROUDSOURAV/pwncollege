@@ -335,3 +335,52 @@ Now copy this **base64** encoding value and copy into a file without any newline
 
 ![Encoding Base64](./Images/Img17.png)
 
+
+
+## 18. `Dealing with Obsfucation`
+
+![Dealing with Obsfucation](./Images/Img18.png)
+
+I copied the code from the **runme** file into a different file named **test.py** and printed the value of the **correct_password** variable to get the value. After that I copied that data into a file named **input** using `echo -n` command to prevent addition of newlines.
+
+
+
+
+## 19. `Dealing with Obfuscation 2`
+
+Analyzing the program I understood that our input gets decoded 2 times in base64 and there is a string reversal which can be ignored because its performed 2 times on our input so it gets cancelled out. I edited the **runme** file and printed the **correct_password** value.
+
+```bash
+correct password before obfuscation => 8 bytes.
+b'==QP9EVT3VEVNdXQE10dBRVT4VEVNdXRE10dBRVT3VERNhXRU10dFRUT3FERNdXQE10dFRVT3FEVNhXRE10dFRUT3VERNdXRE10dBRUT3FEVNhXQU10dFRUT'
+correct password after obfuscation => 120 bytes
+```
+
+Notice the `==` sign is before which is incorrect padding in base64 encoding but the **correct_password** encoding gets reversed in the **runme** file for obfuscation.
+
+So basically, we need to reverse the encoding of the **correct_password** and perform base64 encoding twice on it to get our input data.
+
+```bash
+hacker@data-dealings~dealing-with-obfuscation-2:/tmp$ python test.py
+correct password before obfuscation => 8 bytes.
+b'==QP9EVT3VEVNdXQE10dBRVT4VEVNdXRE10dBRVT3VERNhXRU10dFRUT3FERNdXQE10dFRVT3FEVNhXRE10dFRUT3VERNdXRE10dBRUT3FEVNhXQU10dFRUT'
+correct password after obfuscation => 120 bytes.
+hacker@data-dealings~dealing-with-obfuscation-2:/tmp$ python 
+Python 3.12.11 (main, Jun  3 2025, 15:41:47) [GCC 14.2.1 20250322] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import base64
+>>> input=b'==QP9EVT3VEVNdXQE10dBRVT4VEVNdXRE10dBRVT3VERNhXRU10dFRUT3FERNdXQE10dFRVT3FEVNhXRE10dFRUT3VERNdXRE10dBRUT3FEVNhXQU10dFRUT'
+>>> encode1=base64.b64encode(input)
+>>> encode2=base64.b64encode(encode1)
+>>> encode2
+b'UFQxUlVEbEZWbFF6VmtWV1RtUllVVVV4TUdSQ1VsWlVORlpGVms1a1dGSkZNVEJrUWxKV1ZETldSVkpPYUZoU1ZURXdaRVpTVlZRelJrVlNUbVJZVVVVeE1HUkdVbFpVTTBaRlZrNW9XRkpGTVRCa1JsSlZWRE5XUlZKT1pGaFNSVEV3WkVKU1ZWUXpSa1ZXVG1oWVVWVXhNR1JHVWxWVQ=='
+```
+
+So our input data is `UFQxUlVEbEZWbFF6VmtWV1RtUllVVVV4TUdSQ1VsWlVORlpGVms1a1dGSkZNVEJrUWxKV1ZETldSVkpPYUZoU1ZURXdaRVpTVlZRelJrVlNUbVJZVVVVeE1HUkdVbFpVTTBaRlZrNW9XRkpGTVRCa1JsSlZWRE5XUlZKT1pGaFNSVEV3WkVKU1ZWUXpSa1ZXVG1oWVVWVXhNR1JHVWxWVQ==`.
+
+![Dealing with Obfuscation 2](./Images/Img19.png)
+
+
+
+
+Finally!!! **Dealing with Data** module is completed. I hope whoever is reading this story has understood my steps and was able to replicate them to get the flag.
