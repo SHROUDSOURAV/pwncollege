@@ -20,5 +20,4 @@
 - The binary data is split into 6 bit chunks from the left to right.
 - 64 characters are there so the encoding is done as per the base64 mapping
 - The **last chunk** doesn't have 6 bit. So to signify this the last bit will produce the `==` sign. Each `=` sign for each missing bit. Since there were **2 bits** missing for the last chunk out of 6 bit so filled with double `==` sign.
-
-
+- Each character in base64 consumes 6 bits. The `=` sign is for the extra bits. Each `=` sign takes 2 bits.
