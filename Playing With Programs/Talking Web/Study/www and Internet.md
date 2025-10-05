@@ -1,4 +1,6 @@
 
+## World Wide Web (WWW)
+
 - World Wide Web or WWW is a technology of interconnected webpages.
 - These webpages communicate through protocols like HTTP or HTTPS.
 - If we want some info we send request and the target server gives us the response.
