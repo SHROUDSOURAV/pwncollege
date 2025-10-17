@@ -9,18 +9,15 @@ Obviously, as you're accessing this website in your web browser, this isn't your
 ## `Your First HTTP Request`
 
 I executed the program which is located in `/challenge` directory. The filename is `server.` Upon running the script the URL will be revealed as shown below.
-
-```bash
-hacker@talking-web~your-first-http-request:/challenge$ ./server
- * Serving Flask app 'server'
- * Debug mode: off
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on http://challenge.localhost:80
-Press CTRL+C to quit
-```
-
-
 The script will only reveal the flag if the requests' User Agent is **Firefox**. So, I used `curl` to send the request.
 
 ![Your First HTTP Request](./Images/Img1.png)
+
+
+## `Reading Flask`
+
+Analyzing the program and the URL `http://challenge.localhost:80` I understood that the endpoint for triggering the **def challenge()** function is `/pwn` and also the user-agent has to be **Firefox**. So, I used `curl` command to do the following.
+
+![Reading Flask](./Images/Img2.png)
+
 
