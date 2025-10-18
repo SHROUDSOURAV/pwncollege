@@ -21,3 +21,9 @@ Analyzing the program and the URL `http://challenge.localhost:80` I understood t
 ![Reading Flask](./Images/Img2.png)
 
 
+## `Commented Data`
+
+Well, this challenge is just the same as the last one except the flag will be hidden as **comment** in the HTML source code but lucky for us `curl` produces the HTML source code as response so we can just use the same previous technique to solve this challenge.
+
+![Commented Data](./Images/Img3.png)
+
