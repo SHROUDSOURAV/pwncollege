@@ -64,3 +64,19 @@ We need to send HTTP GET request to the target URL using Python's requests libra
 
 ![HTTP(python)](./Images/Img8.png)
 
+
+## 9. `HTTP Host Header(python)`
+
+We need to send HTTP get request to the target URL by making changing the host header using python requests library. The host header name will be provided inside the **server** script.
+
+![HTTP Host Header(python)](./Images/Img9.png)
+
+
+## 10. `HTTP Host Header(curl)`
+
+Same as the previous challenge except we need to use `curl` this time.
+
+![HTTP Host Header(curl)](./Images/Img10.png)
+
+
+
