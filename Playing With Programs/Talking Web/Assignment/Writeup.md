@@ -79,4 +79,30 @@ Same as the previous challenge except we need to use `curl` this time.
 ![HTTP Host Header(curl)](./Images/Img10.png)
 
 
+## 11. `HTTP Host Header(netcat)`
+
+Same as the previous challenge except we need to use `netcat` this time. Remember that `netcat` alone will not be sufficient to solve this challenge so you can use `echo` command along with it as well, like I have shown below in the image.
+
+![HTTP Host Header(netcat)](./Images/Img11.png)
+
+
+## 12. `URL Encoding(netcat)`
+
+We need to use `netcat` to send HTTP GET request to a URL with the mentioned Host header and also the endpoint for the URL has spaces so we need to provided the correct encoded value of spaces as well.
+
+![URL Encoding(netcat)](./Images/Img11.png)
+
+
+## 13. `HTTP GET Parameters`
+
+We need to pass a **Query String** in our HTTP GET request to get the challenge flag.
+
+![HTTP GET Parameters](./Images/Img13.png)
+
+
+## 14. `Multiple HTTP Parameters(netcat)`
+
+We need to again pass **Query String** in our HTTP GET request but this time there will be multiple query strings so we can append them using **&** symbol. We will use `netcat` for this challenge.
+
+![Multiple HTTP Parameters(netcat)](./Images/Img14.png)
 
