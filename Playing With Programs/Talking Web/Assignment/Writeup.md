@@ -113,3 +113,30 @@ We need to pass multiple query string just like the previous challenge using `cu
 
 ![Multiple HTTP Parameters(curl)](./Images/Img15.png)
 
+
+## 16. `HTTP Forms`
+
+We need to send POST request to the server. I am going to use `curl` because its much faster than using the web browser for this challenge. To send POST request using `curl` we use the `-X POST` and since there is a parameter which we need to pass along with the POST request therefore we need to use `-d` option as well.
+
+![HTTP Forms](./Images/Img16.png)
+
+
+## 17. `HTTP Forms(curl)`
+
+This challenge is actually asking us to solve it via `curl` which I have shown previously. So, its just like the previous one.
+
+![HTTP Forms(curl)](./Images/Img17.png)
+
+
+## 18. `HTTP Forms(netcat)`
+
+This one is a bit tricky and honestly a bit frustrating for me. I kept messing up the URL so its better you refer to the link -> [Mozilla](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST) before forming your POST request URL. This challenge is same as the previous one except for this time we are using `netcat`.
+
+Remember the following things :-
+- Mention the Content Length
+- Mention the Content Type
+
+I mentioned the above 2 points because you might ignore mentioning them and keep wasting your time trying your URL.
+
+![HTTP Forms(netcat)](./Images/Img18.png)
+
