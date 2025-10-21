@@ -106,3 +106,10 @@ We need to again pass **Query String** in our HTTP GET request but this time the
 
 ![Multiple HTTP Parameters(netcat)](./Images/Img14.png)
 
+
+## 15. `Multiple HTTP Parameters(curl)`
+
+We need to pass multiple query string just like the previous challenge using `curl` this time. The shell might interpret the **&** symbol for something else so its better to keep the target URL within quotes.
+
+![Multiple HTTP Parameters(curl)](./Images/Img15.png)
+
