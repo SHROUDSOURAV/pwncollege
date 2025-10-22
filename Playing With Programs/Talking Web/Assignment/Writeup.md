@@ -140,3 +140,31 @@ I mentioned the above 2 points because you might ignore mentioning them and keep
 
 ![HTTP Forms(netcat)](./Images/Img18.png)
 
+
+## 19. `HTTP Forms(python)`
+
+We need to send POST request to the target server using Python's requests library. Below is the program how to do this.
+
+![HTTP Forms(python)](./Images/Img19.png)
+
+
+## 20. `HTTP Forms Without Forms`
+
+Sending POST request using `curl` as shown below.
+
+![HTTP Forms Without Forms](./Images/Img20.png)
+
+
+## 21. `HTTP Forms Without Forms(curl)`
+
+Same thing as the previous challenge.
+
+![HTTP Forms Without Forms(curl)](./Images/Img21.png)
+
+
+## 22. `HTTP Forms Without Forms(netcat)`
+
+Same this as the previous challenge. This time using `netcat`.
+
+![HTTP Forms Without Forms(netcat)](./Images/Img22.png)
+
