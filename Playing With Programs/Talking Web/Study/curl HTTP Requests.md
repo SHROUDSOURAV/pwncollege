@@ -33,4 +33,14 @@ curl -H 'User-Agent: <user_agent_name>' <target_ip>/<domain_name>
 - `curl` can be used to make it seem the request was by something else.
 
 
+### Setting Cookie
+
+```bash
+curl --cookie '<name>=<value>' <target_ip>/<domain_name>
+```
+
+- `name` = cookie name(as you please)
+- `value` = cookie value 
+
+
 
