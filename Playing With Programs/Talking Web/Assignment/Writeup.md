@@ -249,3 +249,17 @@ After getting the cookie value add it as a header in the HTTP GET request just l
 
 ![HTTP Cookies(netcat)](./Images/Img27.png)
 
+
+## 28. `HTTP Cookies(python)`
+
+Same as the previous challenge but this time using Python's requests library. 
+
+```python
+import requests
+url='http://127.0.0.1:80'
+r=requests.get(url)
+print(r.text)
+```
+
+I think there is some problem with the challenge because I only made a HTTP GET request using a simple python program and it generated the flag, I didn't need to set the cookie value.
+
