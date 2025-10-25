@@ -208,3 +208,44 @@ Doing redirects using `curl` is easier because `curl` has `-L` option which enab
 Using Python's requests library to solve this challenge. Python's requests library will automatically follow up the redirection.
 
 ![HTTP Redirects(python)](./Images/Img25.png)
+
+
+## 26. `HTTP Cookies(curl)`
+
+```bash
+hacker@talking-web~http-cookies-curl:/challenge$ ./run
+Make an HTTP request to 127.0.0.1 on port 80 to get the flag. Make any HTTP request, and the server will ask you to set a cookie. Make another request with that cookie to get the flag.
+You must make this request using the curl command
+
+The following output is from the server, might be useful in helping you debug:
+------------------------------------------------
+ * Serving Flask app 'run'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:80
+Press CTRL+C to quit
+```
+
+I executed the script **run** and it clearly states that first we need to make a HTTP request at the target URL `http://127.0.0.1` on port `80` which will give us a **cookie** and we need to use `curl` to **set-cookie** in our HTTP header so that we get the flag. 
+
+```bash
+curl http://localhost:80 -v
+``` 
+
+We are basically making a HTTP GET request at the target URL and the `-v` option gives us the Response details from the server where we will find our **Cookie**. After that we need to use that cookie to get our flag as shown below.
+
+![HTTP Cookies(curl)](./Images/Img26.png)
+
+
+## 27. `HTTP Cookies(netcat)`
+
+Same as the previous challenge but this time using `netcat`. So first we need to send our HTTP GET request to get our cookie value as shown below.
+
+```bash
+echo -ne 'GET / HTTP/1.1\r\n\r\n' | nc 127.0.0.1 80
+```
+
+After getting the cookie value add it as a header in the HTTP GET request just like last time to get the flag.
+
+![HTTP Cookies(netcat)](./Images/Img27.png)
+
