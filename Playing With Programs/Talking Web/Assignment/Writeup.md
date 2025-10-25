@@ -168,3 +168,43 @@ Same this as the previous challenge. This time using `netcat`.
 
 ![HTTP Forms Without Forms(netcat)](./Images/Img22.png)
 
+
+## 23. `HTTP Redirects(netcat)`
+
+We need to make a GET request first and using the `-v` option with `netcat` will show us the response and we will then get the redirect actual endpoint as shown below.
+
+```bash
+hacker@talking-web~http-redirects-netcat:/challenge$ echo -ne 'GET / HTTP/1.1\r\nHost: challenge.localhost:80\r\n\r\n' | nc challenge.localhost 80 -v
+Connection to challenge.localhost (127.0.0.1) 80 port [tcp/http] succeeded!
+HTTP/1.1 302 FOUND
+Server: Werkzeug/3.0.6 Python/3.8.10
+Date: Thu, 23 Oct 2025 14:54:45 GMT
+Content-Type: text/html; charset=utf-8
+Content-Length: 221
+Location: /wbcYrxAh-fulfill
+Connection: close
+
+<!doctype html>
+<html lang=en>
+<title>Redirecting...</title>
+<h1>Redirecting...</h1>
+<p>You should be redirected automatically to the target URL: <a href="/wbcYrxAh-fulfill">/wbcYrxAh-fulfill</a>. If not, click the link.
+```
+
+Now making GET request to the actual endpoint using `netcat` and getting the flag.
+
+![HTTP Redirects(netcat)](./Images/Img23.png)
+
+
+## 24. `HTTP Redirects(curl)`
+
+Doing redirects using `curl` is easier because `curl` has `-L` option which enables us to follow the redirection link. You can also enable the `-v` option to get the response and request info for better clarification.
+
+![HTTP Redirects(curl)](./Images/Img24.png) 
+
+
+## 25. `HTTP Redirects(python)`
+
+Using Python's requests library to solve this challenge. Python's requests library will automatically follow up the redirection.
+
+![HTTP Redirects(python)](./Images/Img25.png)
