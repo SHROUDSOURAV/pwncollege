@@ -263,3 +263,56 @@ print(r.text)
 
 I think there is some problem with the challenge because I only made a HTTP GET request using a simple python program and it generated the flag, I didn't need to set the cookie value.
 
+
+## 29. `Server State (python)`
+
+Wrote a basic python script to get the flag just like the last time.
+
+```python
+import requests
+url='http://127.0.0.1:80'
+r=requests.get(url)
+print(r.text)
+```
+
+
+## 30. `Listening Web`
+
+I am going to be using `netcat` to solve this challenge. We will use `netcat` to listen for incoming requests from the URL `http://localhost` on port `1337`.
+
+```bash
+nc -l -p 1337 -v
+```
+
+The `netcat` will listen for incoming requests on that particular port and when you run the challenge script you will get the flag.
+
+
+## 31. `Speaking Redirects`
+
+We first need to start our **server** program which will listen at `http://challenge.localhost:80/attempt` and we need our **redirection** program to redirect the **client** program from `http://localhost:1337` to the **server** program endpoint. If we are able to perform this redirection then the **client** program will produce the flag.
+
+##### Redirect.py
+
+```python
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind(('0.0.0.0', 1337))
+s.listen(5)
+print("Listening on port 1337...")
+while True:
+    conn, addr = s.accept()
+    request = conn.recv(1024)
+    print("Received request:", request.decode())
+    response = (
+        "HTTP/1.1 302 Found\r\n"
+        "Location: http://challenge.localhost:80/attempt\r\n"
+        "Content-Length: 0\r\n"
+        "\r\n\r\n"
+    )
+    conn.sendall(response.encode())
+    conn.close() 
+```
+
+Start the **server** program and then the **redirect** program and after that start the **client** program to get the flag. **KEEP 3 TABS OPEN FOR PROPER RESULTS**. After all of this is done checkout the tab where you started the **client** program only if **server** program returns **200 status code**.
+
+
