@@ -322,7 +322,7 @@ Read the instructions carefully mentioned in the challenge. It states you need t
 
 We need to write the JavaScript code to cause this redirection. 
 
-#### Redirection Code
+#### solve.html
 
 ```html
 <html>
@@ -343,7 +343,7 @@ We need to write the JavaScript code to cause this redirection.
 
 This challenge is a bit trickier than the previous one. We first need to include the external script located at `http://challenge.localhost:80/solve` endpoint into our `solve.html` file and at same location like last time. After loading this script we can access the `flag` variable. We then use the **window.location** object of JavaScript to add this **flag** into our URL where we can redirect the browser and it will print the **flag** at that location.
 
-#### GET Flag Code
+#### solve.html
 
 ```html
 <html>
