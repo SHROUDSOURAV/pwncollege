@@ -316,3 +316,49 @@ while True:
 Start the **server** program and then the **redirect** program and after that start the **client** program to get the flag. **KEEP 3 TABS OPEN FOR PROPER RESULTS**. After all of this is done checkout the tab where you started the **client** program only if **server** program returns **200 status code**.
 
 
+## 32. `JavaScript Redirects`
+
+Read the instructions carefully mentioned in the challenge. It states you need to create an HTML find at this location `/home/hacker/public_html/solve.html`. The name provided should be the same as well. Our target is to redirect the **client** program to the `http://challenge.localhost:80/fulfill` endpoint or basically to the location of the **server** program.
+
+We need to write the JavaScript code to cause this redirection. 
+
+#### Redirection Code
+
+```html
+<html>
+	<head>
+		<title>Redirection</title>
+	</head>
+	<body>
+		<p>Redirection using Javascript!!!</p>
+	</body>
+	<script>
+		window.location.href='http://challenge.localhost:80/fulfill';
+	</script>
+</html>
+```
+
+
+## 33. `Including JavaScript`
+
+This challenge is a bit trickier than the previous one. We first need to include the external script located at `http://challenge.localhost:80/solve` endpoint into our `solve.html` file and at same location like last time. After loading this script we can access the `flag` variable. We then use the **window.location** object of JavaScript to add this **flag** into our URL where we can redirect the browser and it will print the **flag** at that location.
+
+#### GET Flag Code
+
+```html
+<html>
+	<head>
+		<title>Redirection</title>
+	</head>
+	<body>
+		<p>Redirection using Javascript!!!</p>
+	</body>
+	<script src='http://challenge.localhost:80/solve'></script>
+	<script>
+		window.location.href='/home/hacker/public_html/solve.html' + flag;
+	</script>
+</html>
+```
+
+You will find the flag at the window where you executed your **server** script. It will return the status code of **200** along with the flag value with the path of the file where you redirected your program.
+
