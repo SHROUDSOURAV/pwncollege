@@ -362,3 +362,68 @@ This challenge is a bit trickier than the previous one. We first need to include
 
 You will find the flag at the window where you executed your **server** script. It will return the status code of **200** along with the flag value with the path of the file where you redirected your program.
 
+
+## 34. `HTTP JavaScript`
+
+We need to understand how `fetch` in JavaScript works for this. `Fetch` makes HTTP request to the target URL and returns a `promise`. If the `promise` is successful, `.then` part is executed. I made an HTTP request using `fetch` to the target URL `http://challenge.localhost:80/submit` and then use **window.location** object to redirect the flag to the **solve.html** file.
+
+#### solve.html
+
+```html
+<html>
+	<head>
+		<title>Redirection</title>
+	</head>
+	<body>
+		<p>Redirection using Javascript!!!</p>
+	</body>
+	<script>
+		fetch('http://challenge.localhost:80/submit').then(response => response.text()).then(content => window.location.href='/home/hacker/public_html/solve.html'+content);
+	</script>
+</html>
+```
+
+
+## 35. `HTTP GET Parameters (javascript)`
+
+This challenge is just like the previous one except we need to pass query string along with our HTTP request using JavaScript `fetch`.
+
+#### solve.html
+
+```html
+<html>
+	<head>
+		<title>Redirection</title>
+	</head>
+	<body>
+		<p>Redirection using Javascript!!!</p>
+	</body>
+	<script>
+		fetch('http://challenge.localhost:80/submission?auth_key=ccczdnxi&access=bezsjgfc&verify=rsdltbwa').then(response => response.text()).then(content => window.location.href='/home/hacker/public_html/solve.html'+content);
+	</script>
+</html>
+```
+
+
+## 36. `HTTP Forms(javascript)`
+
+We need to send POST request using JavaScript `fetch`.
+
+#### solve.html
+
+```html
+<html>
+	<head>
+		<title>Redirection</title>
+	</head>
+	<body>
+		<p>Redirection using Javascript!!!</p>
+	</body>
+	<script>
+		fetch('http://challenge.localhost:80/hack',{
+			method: 'POST',
+			body: new URLSearchParams({pin: 'pzzodcbb', code: 'ohrcrevd', challenge_key: 'redeczgy'})
+		}).then(response => response.text()).then(content => window.location.href='/home/hacker/public_html/solve.html'+content);
+	</script>
+</html>
+```
