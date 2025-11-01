@@ -137,7 +137,7 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 
 ## 11. `od`
 
-`od` command displays data in octal format (0-7). Used the `tr -d [:space:]` part to delete horizontal, vertical, newline spaces. 
+`od` command displays data in octal format (0-7). 
 
 ```bash
 hacker@program-misuse~od:/challenge$ ls -l od
@@ -154,8 +154,101 @@ hacker@program-misuse~od:/challenge$ od -c ../flag
 0000040   H   P   E   g   d   r   g   .   0   1   M   1   E   D   L   z
 0000060   c   T   O   5   U   z   W   }  \n
 0000071
-hacker@program-misuse~od:/challenge$ od -c ../flag | tr -d '[:space:]'
-0000000pwn.college{xxxxxxxxFLAGxxxxxxxx}\n0000071
 ```
+
+
+## 12. `hd`
+
+`hd` command displays data in hexadecimal, octal and ascii format
+
+```bash
+hacker@program-misuse~hd:/challenge$ hd ../flag
+00000000  70 77 6e 2e 63 6f 6c 6c  65 67 65 7b 38 50 61 47  |YOUR FLAG|
+00000010  66 76 56 51 72 4f 62 56  54 4c 52 61 4d 66 76 5a  |WILL BE|
+00000020  44 7a 6b 33 55 5a 54 2e  30 46 4e 31 45 44 4c 7a  |DISPLAYED|
+00000030  63 54 4f 35 55 7a 57 7d  0a                       |HERE.|
+00000039
+
+```
+
+
+## 13. `xxd`
+
+`xxd` command used for hex encoding/decoding and produces the hex dump of the file contents.
+
+```bash
+hacker@program-misuse~xxd:/challenge$ xxd ../flag
+00000000: 7077 6e2e 636f 6c6c 6567 657b 4541 736a  pwn.college{xxxx
+00000010: 7664 3537 695f 6a30 4d51 4435 4930 7073  xxxx FLAG WILL BE
+00000020: 487a 2d5f 4b6f 642e 3056 4e31 4544 4c7a  DISPLAYED HERE
+00000030: 6354 4f35 557a 577d 0a                   xxxxxx}.
+```
+
+
+## 14. `base32`
+
+It is an encoding format. The `-d` switch is used to decode the `base32` encoding format.
+
+```bash
+hacker@program-misuse~base32:/challenge$ base32 ../flag
+OB3W4LTDN5WGYZLHMV5WO6BVLA3TEU2PJJ5EMRSCMFYS2VDLKE2EGRZWNN2WMRJOGBWE4MKFIRGH
+UY2UJ42VK6SXPUFA====
+hacker@program-misuse~base32:/challenge$ echo 'OB3W4LTDN5WGYZLHMV5WO6BVLA3TEU2PJJ5EMRSCMFYS2VDLKE2EGRZWNN2WMRJOGBWE4MKFIRGHUY2UJ42VK6SXPUFA====' > /tmp/baseForm
+hacker@program-misuse~base32:/challenge$ base32 -d /tmp/baseForm 
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 15. `base64`
+
+The binary data is split into 6 bit chunks from the left to right. 64 characters are there so the encoding is done as per the base64 mapping. The `=` sign is for the extra bits.
+
+```bash
+hacker@program-misuse~base64:/challenge$ base64 ../flag
+cHduLmNvbGxlZ2V7RXJNUzFTMUFiUFFaTjNIaWRHQjdhdTNjV3FNLjAxTjFFREx6Y1RPNVV6V30K
+hacker@program-misuse~base64:/challenge$ echo 'cHduLmNvbGxlZ2V7RXJNUzFTMUFiUFFaTjNIaWRHQjdhdTNjV3FNLjAxTjFFREx6Y1RPNVV6V30K' > /tmp/flag
+hacker@program-misuse~base64:/challenge$ base64 -d /tmp/flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 16. `split`
+
+`split` command is used to split the content of the file based upon our choice of lines. I only split in 1 line because the flag content will be of 1 line only.
+
+```bash
+hacker@program-misuse~split:/challenge$ split -l 1 ../flag
+hacker@program-misuse~split:/challenge$ ls
+split  xaa
+hacker@program-misuse~split:/challenge$ cat xaa
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 17. `gzip`
+
+`gzip` is used for compression of files. We need to decompress the files to get our flag so we will use the `-d` switch for decompression.
+
+```bash
+hacker@program-misuse~gzip:/challenge$ ls -l
+total 0
+lrwxrwxrwx 1 root root 13 Nov  1 18:56 gzip -> /usr/bin/gzip
+hacker@program-misuse~gzip:/challenge$ ls ../
+bin  boot  challenge  dev  etc  flag  home  lib  lib32  lib64  libx32  media  mnt  nix  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+hacker@program-misuse~gzip:/challenge$ rm /tmp/flag
+hacker@program-misuse~gzip:/challenge$ ls /tmp/flag.gz 
+/tmp/flag.gz
+hacker@program-misuse~gzip:/challenge$ gzip -c ../flag > /tmp/flag.gz 
+hacker@program-misuse~gzip:/challenge$ ls -l /tmp/flag.gz 
+-rw-r--r-- 1 hacker hacker 82 Nov  1 19:10 /tmp/flag.gz
+hacker@program-misuse~gzip:/challenge$ gzip -d /tmp/flag.gz 
+hacker@program-misuse~gzip:/challenge$ ls -l /tmp/flag 
+-rw-r--r-- 1 hacker hacker 57 Nov  1 19:10 /tmp/flag
+hacker@program-misuse~gzip:/challenge$ cat /tmp/flag 
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+
 
 
