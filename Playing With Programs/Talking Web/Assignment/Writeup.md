@@ -266,7 +266,7 @@ I think there is some problem with the challenge because I only made a HTTP GET 
 
 ## 29. `Server State (python)`
 
-Wrote a basic python script to get the flag just like the last time.
+	Wrote a basic python script to get the flag just like the last time.
 
 ```python
 import requests
@@ -407,7 +407,7 @@ This challenge is just like the previous one except we need to pass query string
 
 ## 36. `HTTP Forms(javascript)`
 
-We need to send POST request using JavaScript `fetch`.
+	We need to send POST request using JavaScript `fetch`.
 
 #### solve.html
 
