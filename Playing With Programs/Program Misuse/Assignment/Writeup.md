@@ -335,7 +335,7 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 ```bash
 hacker@program-misuse~genisoimage:/$ genisoimage -sort /flag
 genisoimage: Incorrect sort file format
-	pwn.college{swAK0GNIsHLZmdC3t3nAQV-hIT1.0VN2EDLzcTO5UzW}
+	pwn.college{xxxxxxxxFLAGxxxxxxxx}
 ```
 
 
