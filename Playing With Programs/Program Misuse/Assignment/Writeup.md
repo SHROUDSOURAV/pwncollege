@@ -137,7 +137,7 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 
 ## 11. `od`
 
-`od` command displays data in octal format (0-7). 
+`od` command displays data in octal format (0-7). Read the output as individual characters if you are confused.
 
 ```bash
 hacker@program-misuse~od:/challenge$ ls -l od
@@ -336,6 +336,25 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 hacker@program-misuse~genisoimage:/$ genisoimage -sort /flag
 genisoimage: Incorrect sort file format
 	pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 24. `env`
+
+ **Environment Variables** are essential and can be accessed based on their scope (**local** and **global**). These variables are essential to run a program or find its path .etc. `env` command in Linux helps to manage the **environment variables**, **run a command**, **add new variables** .etc. Since in this challenge `/usr/bin/env` is set as SETUID binary we will use it read the flag file contents as shown below.
+
+```bash
+hacker@program-misuse~env:/challenge$ env cat /flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 25. `find`
+
+`find` command in Linux helps us to find files or directories in Linux.
+
+```bash
+
 ```
 
 
