@@ -30,7 +30,7 @@
 
 #### Cons
 
-- double the size of the data i.e each hex digit is a byte.
+- double the size of the data i.e. each hex digit is a byte.
 
 
 ```bash
