@@ -437,6 +437,8 @@ watch -x cat /flag
 
 ## 32. `socat`
 
+`socat` command is used for bidirectional data transfers between 2 independent data channels.
+
 ```bash
 hacker@program-misuse~socat:/challenge$ socat EXEC:'cat /flag' STDIO
 pwn.college{xxxxxxxxFLAGxxxxxxxx}
