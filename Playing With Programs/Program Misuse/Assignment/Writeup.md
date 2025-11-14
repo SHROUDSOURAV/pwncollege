@@ -115,46 +115,24 @@ xxd ../flag
 
 ## 14. `base32`
 
-It is an encoding format. The `-d` switch is used to decode the `base32` encoding format.
+It is an encoding format. The `-d` switch is used to decode the `base32` encoding format. The above command gives us the `base32` encoded data of the flag content. Passing the `base32` data into a temporary file. Decoding the encoded data to get the flag value.
 
 ```bash
-hacker@program-misuse~base32:/challenge$ base32 ../flag
-```
-
-The above command gives us the `base32` encoded data of the flag content.
-
-```bash
+base32 ../flag
 echo 'OB3W4LTDN5WGYZLHMV5WO6BVLA3TEU2PJJ5EMRSCMFYS2VDLKE2EGRZWNN2WMRJOGBWE4MKFIRGHUY2UJ42VK6SXPUFA====' > /tmp/baseForm
-```
-
-Passing the `base32` data into a temporary file.
-
-```bash
 base32 -d /tmp/baseForm
 ```
-
-Decoding the encoded data to get the flag value.
 
 
 ## 15. `base64`
 
-The binary data is split into 6 bit chunks from the left to right. 64 characters are there so the encoding is done as per the base64 mapping. The `=` sign is for the extra bits.
+The binary data is split into 6 bit chunks from the left to right. 64 characters are there so the encoding is done as per the base64 mapping. The `=` sign is for the extra bits. Passing the `base64` data into a temporary file. Decoding the encoded data to get the flag value.
 
 ```bash
-hacker@program-misuse~base64:/challenge$ base64 ../flag
-```
-
-```bash
+base64 ../flag
 echo 'cHduLmNvbGxlZ2V7RXJNUzFTMUFiUFFaTjNIaWRHQjdhdTNjV3FNLjAxTjFFREx6Y1RPNVV6V30K' > /tmp/flag
-```
-
-Passing the `base64` data into a temporary file.
-
-```bash
 base64 -d /tmp/flag
 ```
-
-Decoding the encoded data to get the flag value.
 
 
 ## 16. `split`
