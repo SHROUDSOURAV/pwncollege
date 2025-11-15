@@ -1,7 +1,7 @@
 
 ## Create Table
 
-- creates a a table
+- creates a a table.
 
 ```
 CREATE TABLE <tablename> (<columns> <datatype>)
