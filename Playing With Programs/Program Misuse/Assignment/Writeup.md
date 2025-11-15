@@ -557,11 +557,11 @@ gcc -shared -fPIC readFlag.c -o readFlag.so
 
 Shared libraries in Linux have `.so` extension while Windows have `.dll`.  Shared Libraries are dynamically linked i.e. the OS loads these libraries during runtime and contain a piece of code which some other application might need. Instead of copying this code and pasting into different files each time the OS dynamically loads them during runtime.
 
-##### PKCS#11
+### PKCS#11
 
 API for Cryptographic Tokens : PKCS#11 defines a C programming interface that allows applications like `ssh-keygen` and `ssh-agent` to communicate with and utilize cryptographic tokens. **PKCS11** has a function called `void C-GetFunctionList()` which is executed first so I added it instead of `int main()`.
 
-#### Running `ssh-keygen`
+### Running `ssh-keygen`
 
 `-D` switch is used to load a shared library. Before doing this its better to move your `.so` or shared library to `/tmp` folder.
 
