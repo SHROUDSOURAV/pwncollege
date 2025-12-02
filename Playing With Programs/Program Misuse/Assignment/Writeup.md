@@ -4,7 +4,7 @@
 ## 1. `cat`
 
 ```bash
-cat ../flag
+cat /flag
 ```
 
 Reading the file permissions for `/usr/bin/cat` I found out it has **SETUID** setup for this binary at the root level so I used it to read the contents of the flag. The `->` sign means `cat` is a symbolic link and `/usr/bin/cat` is the actual path of the `cat` command.
@@ -13,14 +13,14 @@ Reading the file permissions for `/usr/bin/cat` I found out it has **SETUID** se
 ## 2. `more`
 
 ```bash
-more ../flag
+more /flag
 ```
 
 
 ## 3. `less`
 
 ```bash
-less ../flag
+less /flag
 ```
 
 The `less` command is a file pager that allows viewing the content of files one screenful at a time, providing interactive navigation.
@@ -29,21 +29,21 @@ The `less` command is a file pager that allows viewing the content of files one 
 ## 4. `tail`
 
 ```bash
-tail ../flag
+tail /flag
 ```
 
 
 ## 5. `head`
 
 ```bash
-head ../flag
+head /flag
 ```
 
 
 ## 6. `sort`
 
 ```bash
-sort ../flag
+sort /flag
 ```
 
 
@@ -52,7 +52,7 @@ sort ../flag
 `vim` is an editor so when the command gets executed a window opens up and you can get your flag from there.
 
 ```bash
-vim ../flag
+vim /flag
 ```
 
 
@@ -61,7 +61,7 @@ vim ../flag
 `emacs` is a GUI text editor. To bypass the GTK we need to use the `-nw` switch. A window will open up showing the contents of the flag file.
 
 ```bash
-emacs -nw ../flag
+emacs -nw /flag
 ```
 
 
@@ -70,7 +70,7 @@ emacs -nw ../flag
 `nano` is another text editor. Again a new window will open will displaying the flag contents.
 
 ```bash
-nano ../flag
+nano /flag
 ```
 
 
@@ -79,7 +79,7 @@ nano ../flag
 `rev` command is used to reverse the order of the characters present in the file. We use the `rev` command first to get the reverse characters' string then again use `rev` to get the original structure.
 
 ```bash
-rev ../flag
+rev /flag
 echo '}WzU5OTczLDE1Ml0.-A46lL90ghJW0u-EQ2g6RUNlDKo{egelloc.nwp' | rev
 ```
 
@@ -89,7 +89,7 @@ echo '}WzU5OTczLDE1Ml0.-A46lL90ghJW0u-EQ2g6RUNlDKo{egelloc.nwp' | rev
 `od` command displays data in octal format (0-7). Read the output as individual characters if you are confused. `-c` switch to get character of each octet value.
 
 ```bash
-od -c ../flag
+od -c /flag
 ```
 
 
@@ -98,7 +98,7 @@ od -c ../flag
 `hd` command displays data in hexadecimal, octal and ascii format
 
 ```bash
-hd ../flag
+hd /flag
 ```
 
 
@@ -107,7 +107,7 @@ hd ../flag
 `xxd` command used for hex encoding/decoding and produces the hex dump of the file contents.
 
 ```bash
-xxd ../flag
+xxd /flag
 ```
 
 
@@ -116,7 +116,7 @@ xxd ../flag
 It is an encoding format. The `-d` switch is used to decode the `base32` encoding format. The above command gives us the `base32` encoded data of the flag content. Passing the `base32` data into a temporary file. Decoding the encoded data to get the flag value.
 
 ```bash
-base32 ../flag
+base32 /flag
 echo 'OB3W4LTDN5WGYZLHMV5WO6BVLA3TEU2PJJ5EMRSCMFYS2VDLKE2EGRZWNN2WMRJOGBWE4MKFIRGHUY2UJ42VK6SXPUFA====' > /tmp/baseForm
 base32 -d /tmp/baseForm
 ```
@@ -127,7 +127,7 @@ base32 -d /tmp/baseForm
 The binary data is split into 6 bit chunks from the left to right. 64 characters are there so the encoding is done as per the base64 mapping. The `=` sign is for the extra bits. Passing the `base64` data into a temporary file. Decoding the encoded data to get the flag value.
 
 ```bash
-base64 ../flag
+base64 /flag
 echo 'cHduLmNvbGxlZ2V7RXJNUzFTMUFiUFFaTjNIaWRHQjdhdTNjV3FNLjAxTjFFREx6Y1RPNVV6V30K' > /tmp/flag
 base64 -d /tmp/flag
 ```
@@ -138,7 +138,7 @@ base64 -d /tmp/flag
 `split` command is used to split the content of the file based upon our choice of lines. I only split in 1 line because the flag content will be of 1 line only.
 
 ```bash
-split -l 1 ../flag
+split -l 1 /flag
 cat xaa
 ```
 
@@ -148,7 +148,7 @@ cat xaa
 `gzip` is used for compression of files. We need to decompress the files to get our flag so we will use the `-d` switch for decompression.
 
 ```bash
-gzip -c ../flag > /tmp/flag.gz 
+gzip -c /flag > /tmp/flag.gz 
 gzip -d /tmp/flag.gz 
 cat /tmp/flag 
 ```
@@ -159,7 +159,7 @@ cat /tmp/flag
 Same procedure for the `bzip2` just like `gzip`.
 
 ```bash
-bzip2 -c ../flag > /tmp/flag.bz2
+bzip2 -c /flag > /tmp/flag.bz2
 bzip2 -d /tmp/flag.bz2 
 cat /tmp/flag 
 ```
@@ -170,7 +170,7 @@ cat /tmp/flag
 `zip` is just another compression program for files and programs, same as `gzip` and `bzip2`. In `zip` command the **arg1** is the `.zip` file you need to create to store the compressed data and then use `unzip` command to decompress the compressed data to get it back in its original state.
 
 ```bash
-zip /tmp/flag.zip ../flag
+zip /tmp/flag.zip /flag
 cd /tmp/
 unzip flag.zip                    
 cat flag
@@ -193,7 +193,7 @@ cat /tmp/flag_copy
 To archive a file we need to use `-r` switch and store that data into a file with `.a` extension.  To extract the file we use `-x` switch.
 
 ```bash
-ar r flag.a ../flag
+ar r flag.a /flag
 ar x flag.a
 cat flag
 ```
