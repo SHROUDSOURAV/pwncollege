@@ -80,11 +80,9 @@ nano ../flag
 
 ```bash
 rev ../flag
-```
-
-```bash
 echo '}WzU5OTczLDE1Ml0.-A46lL90ghJW0u-EQ2g6RUNlDKo{egelloc.nwp' | rev
 ```
+
 
 ## 11. `od`
 
