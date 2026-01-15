@@ -9,7 +9,7 @@ The below script is for removing the headache of assembling the assembly code an
 
 ```bash
 #!/bin/bash
-nasm -f elf64 assembly.s -o assembly # forming object code file using nasm
+nasm -f elf64 assembly.s -o assembly.o # forming object code file using nasm
 ld -f assembly.o -o assembly # creating executable using linker
 /challenge/run assembly # run the challenge file
 ```
