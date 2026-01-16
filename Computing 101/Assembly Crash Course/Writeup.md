@@ -395,6 +395,133 @@ done:
 
 ## indirect-jump
 
-```nasm
+Using the above knowledge, implement the following logic:
 
 ```
+if rdi is 0:
+  jmp 0x40301e
+else if rdi is 1:
+  jmp 0x4030da
+else if rdi is 2:
+  jmp 0x4031d5
+else if rdi is 3:
+  jmp 0x403268
+else:
+  jmp 0x40332c
+```
+
+- Assume `rdi` will NOT be negative.
+- Use no more than 1 `cmp` instruction.
+- Use no more than 3 jumps (of any variant).
+- We will provide you with the number to 'switch' on in `rdi`.
+- We will provide you with a jump table base address in `rsi`.
+
+```nasm
+cmp rdi, 3
+ja switch_case
+jmp [rsi+rdi*8]
+switch_case:
+	jmp [rsi+4*8]
+```
+
+## average-loop
+
+Compute the average of `n` consecutive quad words, where:
+
+- `rdi` = memory address of the 1st quad word
+- `rsi` = `n` (amount to loop for)
+- `rax` = average computed
+
+```nasm
+mov rax, 0
+mov rcx, 0
+mov rbx, rsi
+checking:
+	cmp rsi, 0
+	jne looping
+	jmp average
+
+looping:
+	add rax, qword[rdi+rcx]
+	add rcx, 8
+	dec rsi
+	jmp checking
+
+average:
+	mov rdx, 0
+	div rbx
+```
+
+## count-not-zero
+
+Count the consecutive non-zero bytes in a contiguous region of memory, where:
+
+- `rdi` = memory address of the 1st byte
+- `rax` = number of consecutive non-zero bytes
+- Additionally, if `rdi = 0`, then set `rax = 0`
+
+```nasm
+mov rcx, -1
+xor rax, rax
+xor rbx, rbx
+cmp rdi, 0
+je done
+
+consecutive_non_zeros:
+	inc rcx
+	mov bl, byte[rdi+rcx]
+	cmp bl, 0
+	jne count_non_zeros
+	mov rax, rcx
+
+done:
+```
+
+## string lower
+
+We need to implement the following logic:
+
+```
+str_lower(src_addr):
+  i = 0
+  if src_addr != 0:
+    while [src_addr] != 0x00:
+      if [src_addr] <= 0x5a:
+        [src_addr] = foo([src_addr])
+        i += 1
+      src_addr += 1
+  return i
+```
+
+`foo` is provided at `0x403000`. `foo` takes a single argument as a value and returns a value. An important note is that `src_addr` is an address in memory (where the string is located) and `[src_addr]` refers to the byte that exists at `src_addr`. Therefore, the function `foo` accepts a byte as its first argument and returns a byte. Also after a function or `call` instruction is used the return value is stored in `rax` register.
+
+```nasm
+mov r8, 0x403000
+
+str_lower:
+    xor     rcx, rcx
+    cmp     rdi, 0x0
+    je      done
+
+loop:
+    mov     rbx, rdi
+    xor     rdi, rdi
+    mov     dil, byte[rbx]
+    cmp     dil, 0x0
+    je      done
+    cmp     dil, 0x5a
+    jg      greater
+    inc     rcx
+    call    r8
+    mov     byte[rbx], al
+
+greater:
+    mov     rdi, rbx
+    inc     rdi
+    jmp     loop
+
+done:
+    mov     rax, rcx
+    ret
+```
+
