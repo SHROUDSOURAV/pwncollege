@@ -525,3 +525,78 @@ done:
     ret
 ```
 
+## most-common-byte
+
+We need to implement the following :-
+
+```
+most_common_byte(src_addr, size):
+  i = 0
+  while i <= size-1:
+    curr_byte = [src_addr + i]
+    [stack_base - curr_byte * 2] += 1
+    i += 1
+
+  b = 0
+  max_freq = 0
+  max_freq_byte = 0
+  while b <= 0xff:
+    if [stack_base - b * 2] > max_freq:
+      max_freq = [stack_base - b * 2]
+      max_freq_byte = b
+    b += 1
+
+  return max_freq_byte
+```
+
+**Assumptions:**
+
+- There will never be more than `0xffff` of any byte
+- The size will never be longer than `0xffff`
+- The list will have at least one element
+
+**Constraints:**
+
+- You must put the "counting list" on the stack
+- You must restore the stack like in a normal function
+- You cannot modify the data at `src_addr`
+
+```nasm
+mov     rbp, rsp
+sub     rsp, 0x100
+xor     r8, r8
+
+most_common_byte:
+loop1:
+    cmp     r8, rsi
+    jg      next
+    mov     dl, byte [rdi + r8]
+    add     byte [rsp + rdx], 1
+    inc     r8
+    jmp     loop1
+
+next:
+    xor     rcx, rcx
+    xor     rbx, rbx
+    xor     rax, rax
+
+loop2:
+    cmp     rcx, 0xff
+    jg      done
+    cmp     [rsp + rcx], bl
+    jg      updateFreq
+    jmp     increment
+
+updateFreq:
+    mov     bl, byte [rsp + rcx]
+    mov     rax, rcx
+    jmp     increment
+
+increment:
+    inc     rcx
+    jmp     loop2
+
+done:
+    mov     rsp, rbp
+    ret
+```
