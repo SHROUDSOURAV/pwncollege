@@ -467,7 +467,7 @@ xor rbx, rbx
 cmp rdi, 0
 je done
 
-consecutive_non_zeros:
+count_non_zeros:
 	inc rcx
 	mov bl, byte[rdi+rcx]
 	cmp bl, 0
