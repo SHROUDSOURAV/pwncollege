@@ -187,3 +187,214 @@ In this challenge we need to set `rax` to the byte of `0x404000`.
 ```nasm
 mov al, byte [0x404000]
 ```
+
+## memory-size-access
+
+```nasm
+mov al, byte [0x404000]
+mov bx, word [0x404000]
+mov ecx, dword [0x404000]
+mov rdx, qword [0x404000]
+```
+
+## little-endian-write
+
+In this challenge we need to store the value in reverse. As an example, say:
+
+```
+[0x1330] = 0x00000000deadc0de
+```
+
+If you examined how it actually looked in memory, you would see:
+
+```
+[0x1330] = 0xde
+[0x1331] = 0xc0
+[0x1332] = 0xad
+[0x1333] = 0xde
+[0x1334] = 0x00
+[0x1335] = 0x00
+[0x1336] = 0x00
+[0x1337] = 0x00
+```
+
+In **little endian** the LSB bit is stored in lower address and MSB to high address.
+We need to set the following :-
+- Set `[rdi] = 0xdeadbeef00001337`
+- Set `[rsi] = 0xc0ffee0000`
+
+We are moving a single byte in each location so `mov byte` is used and in the `rsi` register the value we need to assign is of 5 bytes so we need to specify the rest 3 bytes as well otherwise will get error.
+
+```nasm
+mov byte[rdi+0], 0x37
+mov byte[rdi+1], 0x13
+mov byte[rdi+2], 0x00
+mov byte[rdi+3], 0x00
+mov byte[rdi+4], 0xef
+mov byte[rdi+5], 0xbe
+mov byte[rdi+6], 0xad
+mov byte[rdi+7], 0xde
+
+mov byte[rsi+0], 0x00
+mov byte[rsi+1], 0x00
+mov byte[rsi+2], 0xee
+mov byte[rsi+3], 0xff
+mov byte[rsi+4], 0xc0
+mov byte[rsi+5], 0x00
+mov byte[rsi+6], 0x00
+mov byte[rsi+7], 0x00
+```
+
+## memory-sum
+
+Perform the following:
+
+- Load two consecutive quad words from the address stored in `rdi`.
+- Calculate the sum of the previous steps' quad words.
+- Store the sum at the address in `rsi`.
+
+We loaded `qword 1` using `[rdi+0]` and then loaded `qword 2` using `[rdi+8]` The 
+
+```nasm
+mov rax, qword[rdi+0]    
+mov rdx, qword[rdi+8]    
+add rax, rdx
+mov [rsi], rax
+```
+
+## stack-subtraction
+
+- `push` instruction decrements the `sp` or stack pointer and stores the value being pushed into the stack.
+- `pop` instruction increments the `sp` or stack pointer and pops the value at the top of the stack and copies it to the register which is being popped.
+
+Using these instructions, we need to take the top value of the stack and subtract `rdi` from it and then put it back.
+
+```nasm
+pop rax
+sub rax, rdi
+push rax
+```
+
+## swap-stack-values
+
+In this challenge we need to use only `push` and `pop` instructions to swap values of `rdi` and `rsi` register.
+
+```nasm
+push rdi
+push rsi
+pop rdi
+pop rsi
+```
+
+## average-stack-values
+
+We need to basically find our the average of 4 consecutive `qword` present in the stack by using the `rsp` register or stack pointer register. The `0` `8` `16` `24` are the summation of consecutive 8 bytes. After finding the average we need to push the value into the stack.
+
+```nasm
+mov r8, qword[rsp+0]
+mov r9, qword[rsp+8]
+mov r10, qword[rsp+16]
+mov r11, qword[rsp+24]
+add r8, r9
+add r8, r10
+add r8, r11
+mov rdx, 0
+mov rax, r8
+mov rbx, 4
+div rbx
+push rax
+```
+
+## absolute-jump
+
+We need to perform **absolute jump** or jump at a location without any condition. This sort of jump can also be called as unconditional jump and is done using the `jmp` instruction. In `x86` architecture such jumps can be performed but we need to load the address into a register first.
+
+```nasm
+mov rax, 0x403000
+jmp rax
+```
+
+## relative-jump
+
+We need to perform the following :-
+
+- Make the first instruction in your code a `jmp`.
+- Make that `jmp` a relative jump of exactly 0x51 bytes from the current instruction.
+- Fill the space between the jump and the destination with `nop` instructions using `.rept`.
+- At the label where the relative jump lands, set `rax` to 0x1.
+
+```nasm
+jmp location
+times 0x51 nop
+location:
+    mov rax, 0x1
+```
+
+## jump-trampoline
+
+Create a two jump trampoline:
+
+- Make the first instruction in your code a `jmp`.
+- Make that `jmp` a relative jump to 0x51 bytes from its current position.
+- At 0x51, write the following code:
+    - Place the top value on the stack into register `rdi`.
+    - `jmp` to the absolute address 0x403000.
+
+```nasm
+jmp location
+times 0x51 nop
+location:
+	pop rdi
+	mov rax, 0x403000
+	jmp rax
+```
+
+## conditional-jump
+
+Assume each dereferenced value is a signed `dword`. This means the values can start as a negative value at each memory position. `x = rdi`, `y = rax`. In this challenge we will use `call` `jmp` and `cmp` instructions to do implement the following :-
+
+- `[x+4] [x+8] [x+12]` are 3 consecutive `dwords` which we need to use during our computation of `y = rax` but first we need to check whether `x = rdi` is `0x7f454c46` or `0x00005A4D` or something else...
+
+```
+if [x] is 0x7f454c46:
+    y = [x+4] + [x+8] + [x+12]
+else if [x] is 0x00005A4D:
+    y = [x+4] - [x+8] - [x+12]
+else:
+    y = [x+4] * [x+8] * [x+12]
+```
+
+```nasm
+mov r8d, dword[rdi+4]
+mov r9d, dword[rdi+8]
+mov r10d, dword[rdi+12]
+mov edx, [rdi]
+cmp edx, 0x7f454c46
+je do_add
+cmp edx, 0x00005A4D
+je do_sub
+jmp do_mul
+
+do_add:
+	add r8d, r9d
+	add r8d, r10d
+	jmp done
+
+do_sub:
+	sub r8d, r9d
+	sub r8d, r10d
+	jmp done
+
+do_mul:
+	imul r8d, r9d
+	imul r8d, r10d
+
+done:
+	mov eax, r8d
+```
+
+## indirect-jump
+
+```nasm
+
+```
