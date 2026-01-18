@@ -65,3 +65,69 @@ _start:
     mov rdi, 0  ; status code
     syscall
 ```
+
+## Bind
+
+We created a `socket` previously for communication in the network and we need the `bind` to assign the `socket` to a specific IP address and port. In this challenge we need to create the `bind` syscall. We need to the following arguments for making the `bind` syscall :-
+
+- **socket file descriptor** -> value returned in `rax` by the `socket` syscall in our previous `socket` creation.
+- **a pointer to a `struct sockaddr` (specifically a `struct sockaddr_in` for IPv4 that holds fields like the address family, port, and IP address)** -> we must create the below structure in memory.
+
+```
+struct sockaddr sturcure below
+	struct sockaddr_in {
+    sa_family_t    sin_family;   // 2 bytes //AF_INET
+    in_port_t      sin_port;     // 2 bytes //PORT NUMBER 80
+    struct in_addr sin_addr;     // 4 bytes //IPv4 0.0.0.0 all networkinterfaces
+};
+```
+
+- **size of that structure** -> the size of the `struct sockaddr`
+
+```nasm
+global _start
+
+section .text
+
+_start:
+    
+
+socket_syscall:    
+    mov rax, 0x29   ; socket syscall number
+    mov rdi, 2  ; AF_INET for IPV4 addresses
+    mov rsi, 1  ; SOCK_STREAM for connection
+    mov rdx, 0  ; default TCP protocol
+    syscall
+
+; struct sockaddr sturcure below
+;    struct sockaddr_in {
+;        sa_family_t    sin_family;   // 2 bytes // AF_INET
+;        in_port_t      sin_port;     // 2 bytes // PORT NUMBER 80
+;        struct in_addr sin_addr;     // 4 bytes // IPv4 -> 0.0.0.0 for all network interfaces
+;    };
+
+
+bind_syscall:
+    mov rdi, rax    ; socket file descriptor returned by socket syscall (arg1)
+    sub rsp, 0x10   ; reserving 16 bytes of memory
+    mov word[rsp], 2    ; sin_family AF_INET
+    mov word[rsp+2], 0x5000 ; Little Endian for 0x80 or port 80 sin_port
+    mov dword[rsp+4], 0x0   ; sin_addr 0.0.0.0 equivalent and dword cuz IPv4 32 bits/4 bytes
+    add qword[rsp+8], 0x0   ; balancing stack alignment so +16 and -16 bytes done
+    lea rsi, [rsp]    ; pointer to struct_addr (arg2)
+    mov rdx, 0x10   ; 16 bytes address length cuz struct_addr is 16 bytes (2+2+4+8)
+    mov rax, 0x31   ; bind syscall number
+    syscall
+
+
+exit_syscall:
+    mov rax, 0x3c   ; exit syscall
+    mov rdi, 0  ; status code
+    syscall
+```
+
+## Listen
+
+We have created a `socket` and bounded it to an IP address and port using our own `bind`. In this challenge we need to prepare our socket to accept incoming connections. This introduces us to `listen` syscall which we need to create in this level. The `listen` syscall requires the following arguments. They are:-
+
+- 
