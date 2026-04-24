@@ -260,16 +260,96 @@ body {
   font-size: 85%;
 }
 
-.markdown-body pre {
-  background-color: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
+/* Custom Hacker Docs Code Block Wrapper */
+.custom-code-block {
+  margin: 1.5rem 0;
   border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background-color: #0d0d0d;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.left-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.window-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.window-controls .ctrl {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+.window-controls .red { background-color: rgba(255, 94, 94, 0.8); }
+.window-controls .yellow { background-color: rgba(234, 180, 8, 0.8); }
+.window-controls .green { background-color: rgba(17, 173, 71, 0.8); }
+
+.lang-label {
+  margin-left: 8px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lang-label svg {
+  width: 14px;
+  height: 14px;
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-family: var(--font-mono);
+}
+
+.copy-btn:hover {
+  color: var(--accent-color);
+}
+.copy-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.code-content {
   padding: 16px;
   overflow-x: auto;
-  font-family: var(--font-mono);
   font-size: 0.9rem;
-  margin-bottom: 16px;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+  font-family: var(--font-mono);
+  line-height: inherit;
+}
+
+.markdown-body pre {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
 }
 
 .markdown-body pre code {

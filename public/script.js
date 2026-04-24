@@ -139,10 +139,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
       markdownBody.innerHTML = `<div class="fade-in">${data.html}</div>`;
       
+      decorateCodeBlocks();
+
     } catch (e) {
       console.error(e);
       markdownBody.innerHTML = `<div style="color:var(--red);text-align:center;"><h2>Connection Error</h2><p>Could not fetch file.</p></div>`;
     }
+  }
+
+  function decorateCodeBlocks() {
+    document.querySelectorAll('.markdown-body pre').forEach(pre => {
+      // Check if already decorated
+      if (pre.parentElement.classList.contains('code-content')) return;
+
+      const codeEl = pre.querySelector('code');
+      let lang = 'bash';
+      if (codeEl && codeEl.className) {
+        const match = codeEl.className.match(/language-(\w+)/);
+        if (match) lang = match[1];
+      }
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'custom-code-block';
+
+      const header = document.createElement('div');
+      header.className = 'code-header';
+
+      const leftGroup = document.createElement('div');
+      leftGroup.className = 'left-group';
+
+      const windowControls = document.createElement('div');
+      windowControls.className = 'window-controls';
+      windowControls.innerHTML = '<div class="ctrl red"></div><div class="ctrl yellow"></div><div class="ctrl green"></div>';
+      
+      const langLabel = document.createElement('div');
+      langLabel.className = 'lang-label';
+      langLabel.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>` + lang;
+
+      leftGroup.appendChild(windowControls);
+      leftGroup.appendChild(langLabel);
+
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'copy-btn';
+      copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> <span>COPY</span>`;
+      
+      copyBtn.onclick = () => {
+        const textToCopy = codeEl ? codeEl.innerText : pre.innerText;
+        navigator.clipboard.writeText(textToCopy);
+        copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> <span class="copied" style="color:var(--green)">COPIED</span>`;
+        setTimeout(() => {
+          copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> <span>COPY</span>`;
+        }, 2000);
+      };
+
+      header.appendChild(leftGroup);
+      header.appendChild(copyBtn);
+
+      wrapper.appendChild(header);
+      
+      pre.parentNode.insertBefore(wrapper, pre);
+      
+      const codeContent = document.createElement('div');
+      codeContent.className = 'code-content';
+      codeContent.appendChild(pre);
+      wrapper.appendChild(codeContent);
+    });
   }
 
   fetchTree();
