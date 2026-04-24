@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PwnCollege Web</title>
+  <!-- Highlight.js Github Dark Theme -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="glitch" data-text="PwnCollege">PwnCollege</span>
+        </div>
+      </div>
+      <div class="nav-container" id="nav-container">
+        <!-- Tree will be injected here -->
+      </div>
+    </aside>
+    <div class="resizer" id="resizer"></div>
+    <main class="content-area">
+      <header class="topbar">
+        <button id="toggle-sidebar-btn" class="menu-btn" title="Toggle Sidebar">☰</button>
+        <span class="active-path" id="active-path">/ </span>
+      </header>
+      <div class="markdown-body" id="markdown-body">
+        <div class="welcome-screen">
+          <h1>Welcome to PwnCollege</h1>
+          <p>Select a file from the sidebar to start reading.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
