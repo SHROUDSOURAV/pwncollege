@@ -10,8 +10,10 @@ const PORT = 3000;
 
 app.use(express.static('public'));
 
+const contentDir = path.join(__dirname, 'content');
+
 // Serve all other files transparently (for images/assets)
-app.use('/files', express.static(__dirname));
+app.use('/files', express.static(contentDir));
 
 // Register NASM as x86asm for highlight.js to support specific code blocks
 hljs.registerAliases('nasm', { languageName: 'x86asm' });
@@ -67,7 +69,7 @@ function getDirectoryTree(dirPath, basePath = '') {
 // API to get structure
 app.get('/api/tree', (req, res) => {
   try {
-    const tree = getDirectoryTree(__dirname);
+    const tree = getDirectoryTree(contentDir);
     res.json(tree);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -81,7 +83,7 @@ app.get('/api/content', (req, res) => {
     return res.status(400).json({ error: 'Invalid path' });
   }
 
-  const absolutePath = path.join(__dirname, relPath);
+  const absolutePath = path.join(contentDir, relPath);
   if (!fs.existsSync(absolutePath)) {
     return res.status(404).json({ error: 'File not found' });
   }
