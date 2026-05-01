@@ -1,2 +1,2 @@
-# pwncollege
-My pwncollege writeups
+# CTF-Writeups
+My CTF-Writeups writeups

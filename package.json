@@ -1,23 +1,23 @@
 {
-  "name": "pwncollege",
+  "name": "ctf-writeups",
   "version": "1.0.0",
-  "description": "My pwncollege writeups",
+  "description": "My CTF-Writeups writeups",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://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@github.com/SHROUDSOURAV/pwncollege.git"
+    "url": "git+https://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@github.com/SHROUDSOURAV/CTF-Writeups.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/SHROUDSOURAV/pwncollege/issues"
+    "url": "https://github.com/SHROUDSOURAV/CTF-Writeups/issues"
   },
-  "homepage": "https://github.com/SHROUDSOURAV/pwncollege#readme",
+  "homepage": "https://github.com/SHROUDSOURAV/CTF-Writeups#readme",
   "dependencies": {
     "express": "^5.2.1",
     "highlight.js": "^11.11.1",
