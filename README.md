@@ -1,3 +1,3 @@
-## PwnCollege
+## CTF Writeups
 
-This repository contains my PwnCollege Writeups.
+This repository contains all my CTF writeups across various platforms like hackthebox, PortSwigger Labs, PwnCollege.etc.
