@@ -198,6 +198,9 @@ body {
   max-width: 900px;
   margin: 0 auto;
   width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .welcome-screen {
@@ -342,6 +345,10 @@ body {
   font-size: 0.9rem;
   font-family: var(--font-mono);
   line-height: inherit;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .markdown-body pre {
@@ -350,11 +357,19 @@ body {
   border: none !important;
   box-shadow: none !important;
   background-color: transparent !important;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .markdown-body pre code {
   color: var(--text-primary);
   display: block;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 /* Custom Scrollbar */
