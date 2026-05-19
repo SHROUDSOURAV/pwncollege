@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const folderPath = activePath.includes('/') 
           ? activePath.substring(0, activePath.lastIndexOf('/')) 
           : '';
-        // Prepend content/ + folderPath/
         finalHref = 'content/' + (folderPath ? folderPath + '/' : '') + finalHref;
       }
     }
@@ -131,17 +130,97 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   }
 
-  // Fetch Tree
+  // --- Reconstruct Directory Tree Dynamically from GitHub API paths ---
+  function buildTreeFromPaths(flatPaths) {
+    const root = [];
+    
+    flatPaths.forEach(filePath => {
+      // Look for files in content/ directory that end with .md
+      if (!filePath.startsWith('content/') || !filePath.endsWith('.md')) return;
+      
+      // Strip "content/" prefix to get relative path
+      const relativePath = filePath.substring('content/'.length);
+      const parts = relativePath.split('/');
+      
+      let currentLevel = root;
+      let accumulatedPath = '';
+      
+      parts.forEach((part, index) => {
+        accumulatedPath = accumulatedPath ? `${accumulatedPath}/${part}` : part;
+        const isFile = index === parts.length - 1;
+        
+        let existing = currentLevel.find(item => item.name === part);
+        if (!existing) {
+          existing = {
+            name: part,
+            path: accumulatedPath,
+            type: isFile ? 'file' : 'directory'
+          };
+          if (!isFile) {
+            existing.children = [];
+          }
+          currentLevel.push(existing);
+        }
+        if (!isFile) {
+          currentLevel = existing.children;
+        }
+      });
+    });
+    
+    // Sort directories before files, and alphabetically
+    function sortTree(nodes) {
+      nodes.sort((a, b) => {
+        if (a.type === b.type) return a.name.localeCompare(b.name);
+        return a.type === 'directory' ? -1 : 1;
+      });
+      nodes.forEach(node => {
+        if (node.children) sortTree(node.children);
+      });
+    }
+    
+    sortTree(root);
+    return root;
+  }
+
+  // Fetch Tree Dynamically
   async function fetchTree() {
     try {
-      // Use relative path for tree.json to support base paths correctly
-      const res = await fetch('tree.json');
-      const tree = await res.json();
+      let tree = [];
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      if (isLocal) {
+        // Fetch dynamically from local Express backend
+        const res = await fetch('/api/tree');
+        tree = await res.json();
+      } else {
+        // Fetch dynamically in real-time from GitHub REST API with caching
+        const cacheKey = 'github_ctf_tree';
+        const cachedData = sessionStorage.getItem(cacheKey);
+        
+        if (cachedData) {
+          tree = JSON.parse(cachedData);
+        } else {
+          const repoOwner = 'ghostware0x00';
+          const repoName = 'CTF-Writeups';
+          const res = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/git/trees/main?recursive=1`);
+          if (!res.ok) {
+            throw new Error(`GitHub API error! status: ${res.status}`);
+          }
+          const data = await res.json();
+          
+          // Reconstruct the tree from flat paths dynamically in the browser
+          tree = buildTreeFromPaths(data.tree.map(item => item.path));
+          
+          // Cache in sessionStorage to prevent hitting API rate limits during quick reloads
+          sessionStorage.setItem(cacheKey, JSON.stringify(tree));
+        }
+      }
+      
       navContainer.innerHTML = '';
       const ul = buildTreeUI(tree);
       navContainer.appendChild(ul);
       
-      // Handle the initial route once the tree UI is fully loaded in DOM
+      // Handle initial dynamic routing
       handleRoute();
     } catch (e) {
       console.error('Failed to load tree:', e);
@@ -205,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadContent(path) {
     activePathSpan.textContent = '/' + path;
     
-    // Set document title
+    // Set document title dynamically
     const fileName = path.includes('/') ? path.substring(path.lastIndexOf('/') + 1) : path;
     const cleanName = fileName.replace('.md', '');
     document.title = `${cleanName} | CTF-Writeups Web`;
@@ -213,14 +292,14 @@ document.addEventListener('DOMContentLoaded', () => {
     markdownBody.innerHTML = '<div style="text-align:center;color:var(--text-muted);margin-top:50px;">Loading... ⚡</div>';
     
     try {
-      // Fetch the markdown file directly relative to the server/root page
+      // Fetch the markdown file dynamically
       const res = await fetch('content/' + encodeURI(path));
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       let content = await res.text();
       
-      // Basic Obsidian image parsing ![[image.png]]
+      // Obsidian image parsing ![[image.png]]
       content = content.replace(/!\[\[(.*?)\]\]/g, '![Obsidian Image]($1)');
       
       const htmlContent = marked.parse(content);
@@ -229,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Decorate code blocks
       decorateCodeBlocks();
       
-      // Highlight and expand sidebar parents
+      // Highlight and expand sidebar parents dynamically
       expandSidebarToPath(path);
 
     } catch (e) {
@@ -239,7 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function expandSidebarToPath(path) {
-    // Clear any existing active class
     document.querySelectorAll('.nav-title.active').forEach(el => el.classList.remove('active'));
     
     const targetEl = document.querySelector(`.nav-title[data-path="${CSS.escape(path)}"]`);
@@ -274,7 +352,6 @@ document.addEventListener('DOMContentLoaded', () => {
       parent = parent.parentElement;
     }
     
-    // Scroll active item smoothly into view
     targetEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
