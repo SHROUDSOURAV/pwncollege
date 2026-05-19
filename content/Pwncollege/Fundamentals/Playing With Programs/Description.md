@@ -1,1 +1,0 @@
-This will teach you the fundamentals of interacting, manipulating data and other stuff. This involves privilege escalation, encoding/decoding, handling web requests .etc.
