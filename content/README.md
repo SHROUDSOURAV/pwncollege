@@ -1,2 +1,2 @@
 # CTF-Writeups
-My CTF-Writeups writeups
+My CTF-Writeups of various platforms.
