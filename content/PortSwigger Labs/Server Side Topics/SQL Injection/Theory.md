@@ -28,7 +28,7 @@
 
 - **Predefined SQL structure** : 
 	- This prevents the attacker from changing the original query structure.
-	- The attacker SQLi payload is treated as data instead of directly appending it to the SQL query.asdasd
+	- The attacker SQLi payload is treated as data instead of directly appending it to the SQL query.
 	
 
 - **Whitelisting permitted input values** :
