@@ -1,121 +1,120 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const { marked } = require('marked');
-const { markedHighlight } = require('marked-highlight');
-const hljs = require('highlight.js');
-const ignore = require('ignore');
 const app = express();
 const PORT = 3000;
 
-app.use(express.static('public'));
+// Function to automatically generate tree.json on server startup
+function generateTreeJson() {
+  console.log('Generating tree.json...');
+  try {
+    const ignore = require('ignore');
+    const contentDir = path.join(__dirname, 'content');
+    
+    const ig = ignore();
+    try {
+      const gitignoreContent = fs.readFileSync(path.join(__dirname, '.gitignore'), 'utf8');
+      ig.add(gitignoreContent);
+    } catch (e) {
+      // Ignore missing .gitignore
+    }
 
-const contentDir = path.join(__dirname, 'content');
+    function getDirectoryTree(dirPath, basePath = '') {
+      let tree = [];
+      const items = fs.readdirSync(dirPath, { withFileTypes: true });
 
-// Serve all other files transparently (for images/assets)
-app.use('/files', express.static(contentDir));
+      items.forEach(item => {
+        if (item.name.startsWith('.') && item.name !== '.gitignore') return;
+        if (
+          item.name === 'node_modules' ||
+          item.name === 'public' ||
+          item.name === 'package.json' ||
+          item.name === 'package-lock.json' ||
+          item.name === 'server.js' ||
+          item.name === 'generate-tree.js'
+        ) return;
+        
+        const itemPath = path.join(dirPath, item.name);
+        const relPath = path.posix.join(basePath, item.name);
+        
+        if (ig.ignores(path.posix.join('content', relPath))) {
+          return;
+        }
 
-// Register NASM as x86asm for highlight.js to support specific code blocks
-hljs.registerAliases('nasm', { languageName: 'x86asm' });
+        if (item.isDirectory()) {
+          const children = getDirectoryTree(itemPath, relPath);
+          if (children.length > 0) {
+            tree.push({ name: item.name, path: relPath, type: 'directory', children });
+          }
+        } else if (item.isFile() && item.name.endsWith('.md')) {
+          tree.push({ name: item.name, path: relPath, type: 'file' });
+        }
+      });
 
-marked.use(markedHighlight({
-  langPrefix: 'hljs language-',
-  highlight(code, lang) {
-    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-    return hljs.highlight(code, { language }).value;
+      return tree.sort((a, b) => {
+        if (a.type === b.type) return a.name.localeCompare(b.name);
+        return a.type === 'directory' ? -1 : 1;
+      });
+    }
+
+    const tree = getDirectoryTree(contentDir);
+    const jsonContent = JSON.stringify(tree, null, 2);
+    
+    // Write to root
+    fs.writeFileSync(path.join(__dirname, 'tree.json'), jsonContent, 'utf8');
+    
+    // Write to public folder
+    const publicDir = path.join(__dirname, 'public');
+    if (fs.existsSync(publicDir)) {
+      fs.writeFileSync(path.join(publicDir, 'tree.json'), jsonContent, 'utf8');
+    }
+    console.log('Successfully generated tree.json!');
+  } catch (error) {
+    console.error('Failed to generate tree.json on startup:', error);
   }
-}));
-
-const ig = ignore();
-try {
-  const gitignoreContent = fs.readFileSync(path.join(__dirname, '.gitignore'), 'utf8');
-  ig.add(gitignoreContent);
-} catch (e) {
-  // Ignore missing .gitignore
 }
 
-function getDirectoryTree(dirPath, basePath = '') {
-  let tree = [];
-  const items = fs.readdirSync(dirPath, { withFileTypes: true });
+// Generate the tree JSON when the server starts
+generateTreeJson();
 
-  items.forEach(item => {
-    // Ignore internal or irrelevant paths
-    if (item.name.startsWith('.') && item.name !== '.gitignore') return;
-    if (item.name === 'node_modules' || item.name === 'public' || item.name === 'package.json' || item.name === 'package-lock.json' || item.name === 'server.js') return;
-    
-    const itemPath = path.join(dirPath, item.name);
-    const relPath = path.posix.join(basePath, item.name);
-    
-    if (ig.ignores(relPath)) {
-      return; // Skip gitignored paths
-    }
+// Serve the public folder as root static files
+app.use(express.static(path.join(__dirname, 'public')));
 
-    if (item.isDirectory()) {
-      const children = getDirectoryTree(itemPath, relPath);
-      if (children.length > 0) {
-        tree.push({ name: item.name, path: relPath, type: 'directory', children });
-      }
-    } else if (item.isFile() && item.name.endsWith('.md')) {
-      tree.push({ name: item.name, path: relPath, type: 'file' });
-    }
-  });
+// Serve the content folder statically as /content
+app.use('/content', express.static(path.join(__dirname, 'content')));
 
-  return tree.sort((a, b) => {
-    if (a.type === b.type) return a.name.localeCompare(b.name);
-    return a.type === 'directory' ? -1 : 1;
-  });
-}
+// Serve tree.json from the root or public folder
+app.get('/tree.json', (req, res) => {
+  res.sendFile(path.join(__dirname, 'tree.json'));
+});
 
-// API to get structure
+// Backward compatibility APIs (in case they are called anywhere)
 app.get('/api/tree', (req, res) => {
   try {
-    const tree = getDirectoryTree(contentDir);
-    res.json(tree);
+    const treeData = fs.readFileSync(path.join(__dirname, 'tree.json'), 'utf8');
+    res.json(JSON.parse(treeData));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// API to get content of an MD file
 app.get('/api/content', (req, res) => {
   const relPath = req.query.path;
   if (!relPath || relPath.includes('..')) {
     return res.status(400).json({ error: 'Invalid path' });
   }
-
-  const absolutePath = path.join(contentDir, relPath);
+  const absolutePath = path.join(__dirname, 'content', relPath);
   if (!fs.existsSync(absolutePath)) {
     return res.status(404).json({ error: 'File not found' });
   }
-
   try {
-    let content = fs.readFileSync(absolutePath, 'utf8');
-    // Basic Obsidian image parsing ![[image.png]]
-    content = content.replace(/!\[\[(.*?)\]\]/g, '![Obsidian Image](/files/$1)');
-    
-    const folderPath = path.posix.dirname(relPath);
-    
-    // Customize marked renderer to prepend path to local images
-    const renderer = new marked.Renderer();
-    renderer.image = ({ href, title, text }) => {
-      let finalHref = href;
-      if(finalHref && !finalHref.startsWith('http') && !finalHref.startsWith('/files/')) {
-        // Prepend the /files + folder path
-        finalHref = '/files/' + path.posix.join(folderPath, finalHref).replace(/\\/g, '/');
-      }
-      let out = '<img src="' + finalHref + '" alt="' + text + '"';
-      if (title) {
-        out += ' title="' + title + '"';
-      }
-      out += '>';
-      return out;
-    };
-
-    const htmlContent = marked.parse(content, { renderer });
-    res.json({ html: htmlContent });
+    const content = fs.readFileSync(absolutePath, 'utf8');
+    res.json({ content: content });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});

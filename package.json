@@ -4,6 +4,8 @@
   "description": "My CTF-Writeups writeups",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
+    "generate-tree": "node generate-tree.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
